@@ -18,4 +18,4 @@ An interactive, single-file web analytics platform that models and ranks the top
 - **Chart.js** (Radar profiles)
 - **FontAwesome & Google Fonts**
 
-- **Link to Dashboard: https://developer-2021-engineer.github.io/Goat-matrix-Football/ **
+- **Link to Dashboard:** https://developer-2021-engineer.github.io/Goat-matrix-Football/ 
