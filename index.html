@@ -101,46 +101,45 @@
 <body class="min-h-screen text-slate-200 flex flex-col antialiased selection:bg-cyan-500 selection:text-black">
 
   <!-- TOP NAVIGATION HEADER -->
-  <header class="sticky top-0 z-40 w-full border-b border-white/10 bg-[#080a10]/95 backdrop-blur-xl px-6 lg:px-12 py-4">
-    <div class="max-w-[1440px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-5">
+  <header class="sticky top-0 z-40 w-full border-b border-white/10 bg-[#080a10]/95 backdrop-blur-xl px-4 lg:px-10 py-3.5 transition-transform duration-300 ease-in-out">
+    <div class="max-w-[1440px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-4">
       
       <!-- Brand Block -->
-      <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 via-cyan-500 to-amber-400 p-0.5 shadow-lg flex items-center justify-center shrink-0">
+      <div class="flex items-center gap-3.5">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500 via-cyan-500 to-amber-400 p-0.5 shadow-lg flex items-center justify-center shrink-0">
           <div class="w-full h-full bg-[#080a10] rounded-[14px] flex items-center justify-center text-amber-400">
-            <i class="fa-solid fa-futbol text-xl"></i>
+            <i class="fa-solid fa-futbol text-lg"></i>
           </div>
         </div>
         <div>
-          <div class="flex items-center gap-3">
-            <h1 class="text-2xl lg:text-3xl font-extrabold font-display tracking-tight text-white">
-              THE GOAT MATRIX
-            </h1>
-            <span class="px-3 py-0.5 text-[10px] font-extrabold font-mono tracking-widest text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 rounded-full uppercase">
+          <h1 class="text-2xl lg:text-3xl font-extrabold font-display tracking-tight text-white">
+            THE GOAT MATRIX
+          </h1>
+          <p class="text-[11px] text-slate-400 font-medium mt-0.5 flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <span>Opta • StatsBomb • FBref</span>
+            <span class="text-slate-600">•</span>
+            <span class="text-amber-400 font-mono font-bold whitespace-nowrap">Zero Video Game Bias</span>
+            <span class="text-slate-600">•</span>
+            <span class="px-2 py-0.5 text-[9px] font-black font-mono tracking-wider text-emerald-400 bg-emerald-500/20 border border-emerald-500/40 rounded-full uppercase shrink-0 whitespace-nowrap">
               100% Real Match Archives
             </span>
-          </div>
-          <p class="text-xs text-slate-400 font-medium mt-0.5 flex items-center gap-2">
-            <span>Opta • StatsBomb • FBref Archives</span>
-            <span class="text-slate-600">•</span>
-            <span class="text-amber-400 font-mono font-bold">Zero Video Game Bias</span>
           </p>
         </div>
       </div>
 
-      <!-- Main Navigation Tabs -->
-      <div class="flex items-center gap-2 bg-slate-900/90 p-1.5 rounded-2xl border border-white/10">
-        <button id="tabCareer" onclick="switchTab('career')" class="tactical-tab tactical-tab-active px-5 py-2.5 rounded-xl text-xs flex items-center gap-2 transition font-mono">
-          <i class="fa-solid fa-chart-line text-sm"></i> Overall Career GOAT
+      <!-- Main Navigation Tabs (Single Line, No Scrolling) -->
+      <div class="flex items-center gap-1 bg-slate-900/90 p-1.5 rounded-2xl border border-white/10 shrink-0 font-mono text-xs">
+        <button id="tabCareer" onclick="switchTab('career')" class="tactical-tab tactical-tab-active px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition font-mono font-extrabold whitespace-nowrap">
+          <i class="fa-solid fa-chart-line text-xs"></i> Overall Career
         </button>
-        <button id="tabPeak" onclick="switchTab('peak')" class="tactical-tab text-slate-400 hover:text-white px-5 py-2.5 rounded-xl text-xs font-extrabold flex items-center gap-2 transition font-mono">
-          <i class="fa-solid fa-bolt text-amber-400 text-sm"></i> Peak Season
+        <button id="tabPeak" onclick="switchTab('peak')" class="tactical-tab text-slate-400 hover:text-white px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition font-mono whitespace-nowrap">
+          <i class="fa-solid fa-bolt text-amber-400 text-xs"></i> Peak Season
         </button>
-        <button id="tabCompare" onclick="switchTab('compare')" class="tactical-tab text-slate-400 hover:text-white px-5 py-2.5 rounded-xl text-xs font-extrabold flex items-center gap-2 transition font-mono">
-          <i class="fa-solid fa-scale-balanced text-cyan-400 text-sm"></i> Head-to-Head
+        <button id="tabCompare" onclick="switchTab('compare')" class="tactical-tab text-slate-400 hover:text-white px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition font-mono whitespace-nowrap">
+          <i class="fa-solid fa-scale-balanced text-cyan-400 text-xs"></i> Head-to-Head
         </button>
-        <button id="tabTable" onclick="switchTab('table')" class="tactical-tab text-slate-400 hover:text-white px-5 py-2.5 rounded-xl text-xs font-extrabold flex items-center gap-2 transition font-mono">
-          <i class="fa-solid fa-list-ol text-sm"></i> Leaderboard
+        <button id="tabTable" onclick="switchTab('table')" class="tactical-tab text-slate-400 hover:text-white px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition font-mono whitespace-nowrap">
+          <i class="fa-solid fa-list-ol text-xs"></i> Leaderboard
         </button>
       </div>
 
@@ -155,8 +154,8 @@
             <i class="fa-solid fa-xmark"></i>
           </button>
 
-          <!-- Floating Google-Style Auto-Suggest Recommendations Dropdown (Glassmorphism) -->
-          <div id="searchSuggestions" class="hidden absolute left-0 right-0 top-full mt-2 bg-[#0c101d]/75 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.85)] ring-1 ring-white/10 overflow-y-auto max-h-60 z-50 p-2 space-y-1.5 transition-all">
+          <!-- Floating Premium Glassmorphic Auto-Suggest Recommendations Dropdown -->
+          <div id="searchSuggestions" class="hidden absolute left-0 right-0 top-full mt-2 bg-[#080c18]/95 backdrop-blur-3xl border border-cyan-500/40 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.95)] ring-1 ring-cyan-500/30 overflow-y-auto max-h-60 z-50 p-2 space-y-1.5 transition-all">
             <!-- Dynamic Suggestion Items -->
           </div>
         </div>
@@ -216,11 +215,11 @@
       <!-- Role Filters -->
       <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
         <span class="font-bold text-slate-300 uppercase text-[11px] tracking-wider mr-2">Positional Role:</span>
-        <button onclick="setPosFilter('ALL')" id="pos-ALL" class="pos-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">All Roles (50)</button>
-        <button onclick="setPosFilter('ATT')" id="pos-ATT" class="pos-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800 border border-transparent">Forwards (18)</button>
-        <button onclick="setPosFilter('MID')" id="pos-MID" class="pos-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800 border border-transparent">Midfielders (16)</button>
-        <button onclick="setPosFilter('DEF')" id="pos-DEF" class="pos-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800 border border-transparent">Defenders (12)</button>
-        <button onclick="setPosFilter('GK')" id="pos-GK" class="pos-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800 border border-transparent">Goalkeepers (4)</button>
+        <button onclick="setPosFilter('ALL')" id="pos-ALL" class="pos-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">All Roles (100)</button>
+        <button onclick="setPosFilter('ATT')" id="pos-ATT" class="pos-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800 border border-transparent">Forwards (38)</button>
+        <button onclick="setPosFilter('MID')" id="pos-MID" class="pos-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800 border border-transparent">Midfielders (32)</button>
+        <button onclick="setPosFilter('DEF')" id="pos-DEF" class="pos-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800 border border-transparent">Defenders (21)</button>
+        <button onclick="setPosFilter('GK')" id="pos-GK" class="pos-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800 border border-transparent">Goalkeepers (9)</button>
       </div>
 
       <!-- Era Filters -->
@@ -347,7 +346,7 @@
           </div>
 
           <!-- Canvas Control Hint -->
-          <div class="absolute bottom-3 left-1/2 -translate-x-1/2 pointer-events-none bg-slate-900/90 px-3.5 py-1 rounded-xl text-[10px] font-mono text-slate-300 border border-white/20 flex items-center gap-2 z-20 font-bold">
+          <div id="canvasControlHint" class="absolute bottom-3 left-1/2 -translate-x-1/2 pointer-events-none bg-slate-900/90 px-3.5 py-1 rounded-xl text-[10px] font-mono text-slate-300 border border-white/20 flex items-center gap-2 z-20 font-bold transition-opacity duration-200">
             <i class="fa-solid fa-computer-mouse text-cyan-400"></i>
             <span>Scroll wheel to zoom • Drag to pan scatter plot</span>
           </div>
@@ -663,7 +662,7 @@
 
   <!-- DATA ENGINE & APPLICATION SCRIPT -->
   <script>
-    // Master 50 Football Legends Dataset
+    // Master 100 Football Legends Dataset
     const playersData = [
       {
         rank: 1, name: "Lionel Messi", country: "Argentina", pos: "ATT", posFull: "False 9 / Playmaker", era: "Modern",
@@ -876,11 +875,11 @@
         desc: "'Il Divin Codino'. 1993 Ballon d'Or winner, single-handedly carried Italy to the 1994 World Cup Final."
       },
       {
-        rank: 31, name: "Kylian Mbappé", country: "France", pos: "ATT", posFull: "Forward / Winger", era: "Modern",
-        scores: { output: 4.75, creation: 4.20, technical: 4.50, biggame: 4.45, athletic: 4.85 },
-        careerScore: 4.51, careerX: 95.0, careerY: 84.0, careerD: 16.76,
-        peakSeason: "2021–22 (39 Goals, 26 Assists)", peakScore: 4.66, peakX: 97.0, peakY: 93.0, peakD: 7.62,
-        desc: "World Cup Final hat-trick (2022) & 2018 World Cup winner. Unmatched burst acceleration and direct channel attack."
+        rank: 31, name: "Giuseppe Meazza", country: "Italy", pos: "ATT", posFull: "Inside Forward / Playmaker", era: "Classic",
+        scores: { output: 4.70, creation: 4.55, technical: 4.65, biggame: 4.80, athletic: 4.10 },
+        careerScore: 4.56, careerX: 95.0, careerY: 94.0, careerD: 7.81,
+        peakSeason: "1933–34 (World Cup Golden Ball & Scudetto)", peakScore: 4.68, peakX: 96.5, peakY: 97.5, peakD: 4.30,
+        desc: "2-time FIFA World Cup Winner (1934, 1938) as team captain. Inter Milan all-time legend, famous for 'gol alla Meazza' dribbling around goalkeepers."
       },
       {
         rank: 32, name: "Manuel Neuer", country: "Germany", pos: "GK", posFull: "Sweeper-Keeper", era: "Modern",
@@ -1014,6 +1013,358 @@
         careerScore: 3.78, careerX: 86.5, careerY: 94.5, careerD: 14.57,
         peakSeason: "2009–10 (World Cup Captain & Golden Glove)", peakScore: 3.81, peakX: 86.0, peakY: 96.5, peakD: 14.43,
         desc: "'San Iker'. Captained Spain to World Cup 2010 and 2 Euro titles. 3 Champions League titles with Real Madrid."
+      },
+
+      // --- NEW EXPANDED LEGENDS 51 to 100 ---
+      {
+        rank: 51, name: "Luis Suárez", country: "Uruguay", pos: "ATT", posFull: "Striker / Center-Forward", era: "Modern",
+        scores: { output: 4.70, creation: 4.50, technical: 4.45, biggame: 4.35, athletic: 4.30 },
+        careerScore: 4.51, careerX: 95.8, careerY: 89.5, careerD: 11.31,
+        peakSeason: "2015–16 (Barcelona - 59 Goals, 24 Assists)", peakScore: 4.72, peakX: 97.8, peakY: 94.0, peakD: 6.39,
+        desc: "2x European Golden Shoe winner in the Messi-Ronaldo era. Outscored both in 2015-16 La Liga with 40 goals."
+      },
+      {
+        rank: 52, name: "Zlatan Ibrahimović", country: "Sweden", pos: "ATT", posFull: "Target Forward", era: "Modern",
+        scores: { output: 4.60, creation: 4.35, technical: 4.65, biggame: 4.10, athletic: 4.60 },
+        careerScore: 4.45, careerX: 94.2, careerY: 90.0, careerD: 11.56,
+        peakSeason: "2015–16 (PSG - 50 Goals in 51 Games)", peakScore: 4.58, peakX: 95.5, peakY: 92.5, peakD: 8.73,
+        desc: "Won league titles in 4 different countries. Taekwondo-infused acrobatic finishing and over 570 career goals."
+      },
+      {
+        rank: 53, name: "Robert Lewandowski", country: "Poland", pos: "ATT", posFull: "Penalty Box Striker", era: "Modern",
+        scores: { output: 4.80, creation: 3.85, technical: 4.20, biggame: 4.40, athletic: 4.50 },
+        careerScore: 4.42, careerX: 94.5, careerY: 88.5, careerD: 12.75,
+        peakSeason: "2019–20 (Bayern Treble - 55 Goals)", peakScore: 4.70, peakX: 97.2, peakY: 95.5, peakD: 5.31,
+        desc: "Broke Gerd Müller's 49-year Bundesliga record with 41 goals in 29 games (2020-21). UEFA Men's Player of the Year 2020."
+      },
+      {
+        rank: 54, name: "Karim Benzema", country: "France", pos: "ATT", posFull: "Complete Striker / Link Play", era: "Modern",
+        scores: { output: 4.40, creation: 4.60, technical: 4.60, biggame: 4.55, athletic: 4.15 },
+        careerScore: 4.46, careerX: 93.8, careerY: 91.5, careerD: 10.51,
+        peakSeason: "2021–22 (Ballon d'Or & 15 UCL Goals)", peakScore: 4.73, peakX: 96.5, peakY: 98.0, peakD: 4.03,
+        desc: "2022 Ballon d'Or winner. Led Real Madrid to 2022 Champions League with 10 knockout goals against PSG, Chelsea, and Man City."
+      },
+      {
+        rank: 55, name: "Samuel Eto'o", country: "Cameroon", pos: "ATT", posFull: "Striker", era: "Modern",
+        scores: { output: 4.55, creation: 4.10, technical: 4.30, biggame: 4.65, athletic: 4.65 },
+        careerScore: 4.41, careerX: 93.5, careerY: 89.0, careerD: 12.78,
+        peakSeason: "2008–09 (Barcelona Treble & UCL Final Goal)", peakScore: 4.56, peakX: 95.0, peakY: 95.0, peakD: 7.07,
+        desc: "Only player to win back-to-back European Trebles with two different clubs (Barcelona 2009, Inter Milan 2010). 4x African POTY."
+      },
+      {
+        rank: 56, name: "Didier Drogba", country: "Ivory Coast", pos: "ATT", posFull: "Big-Game Target Forward", era: "Modern",
+        scores: { output: 4.30, creation: 4.00, technical: 4.15, biggame: 4.90, athletic: 4.75 },
+        careerScore: 4.35, careerX: 91.5, careerY: 90.0, careerD: 13.12,
+        peakSeason: "2011–12 (UCL Winner & Munich Final Hero)", peakScore: 4.50, peakX: 93.0, peakY: 98.0, peakD: 7.28,
+        desc: "Ultimate clutch big-game performer. Scored 10 goals in 10 cup finals for Chelsea, including equalizing header & winning penalty in 2012 UCL."
+      },
+      {
+        rank: 57, name: "Wayne Rooney", country: "England", pos: "ATT", posFull: "Forward / Attacking Mid", era: "Modern",
+        scores: { output: 4.35, creation: 4.40, technical: 4.30, biggame: 4.35, athletic: 4.50 },
+        careerScore: 4.37, careerX: 92.5, careerY: 89.5, careerD: 12.91,
+        peakSeason: "2009–10 (34 Goals for Man United)", peakScore: 4.51, peakX: 94.0, peakY: 93.5, peakD: 8.85,
+        desc: "Manchester United's all-time record goalscorer (253 goals). 5 Premier League titles and 2008 Champions League winner."
+      },
+      {
+        rank: 58, name: "Dennis Bergkamp", country: "Netherlands", pos: "ATT", posFull: "Second Striker / Playmaker", era: "Modern",
+        scores: { output: 4.10, creation: 4.75, technical: 4.95, biggame: 4.20, athletic: 3.85 },
+        careerScore: 4.38, careerX: 93.0, careerY: 86.0, careerD: 15.65,
+        peakSeason: "1997–98 (Arsenal Double & WC '98 Goal)", peakScore: 4.54, peakX: 94.5, peakY: 94.0, peakD: 8.14,
+        desc: "'The Non-Flying Dutchman'. Unrivalled first-touch control and spatial awareness. Iconic World Cup goal against Argentina."
+      },
+      {
+        rank: 59, name: "Gabriel Batistuta", country: "Argentina", pos: "ATT", posFull: "Power Striker", era: "Retro",
+        scores: { output: 4.70, creation: 3.60, technical: 4.10, biggame: 4.35, athletic: 4.45 },
+        careerScore: 4.31, careerX: 92.0, careerY: 85.5, careerD: 16.56,
+        peakSeason: "1998–99 (Fiorentina Serie A Fury)", peakScore: 4.42, peakX: 94.0, peakY: 90.0, peakD: 11.66,
+        desc: "'Batigol'. Pure explosive finishing power. 56 goals in 78 games for Argentina, hat-tricks in two separate World Cup tournaments."
+      },
+      {
+        rank: 60, name: "Frank Rijkaard", country: "Netherlands", pos: "MID", posFull: "Defensive Midfielder / CB", era: "Retro",
+        scores: { output: 3.50, creation: 4.40, technical: 4.25, biggame: 4.70, athletic: 4.70 },
+        careerScore: 4.28, careerX: 89.5, careerY: 94.5, careerD: 11.85,
+        peakSeason: "1989–90 (AC Milan UCL Final Goalscorer)", peakScore: 4.36, peakX: 90.5, peakY: 97.0, peakD: 9.96,
+        desc: "Engine of AC Milan and Netherlands '88 Euro triumph. Perfect hybrid of tactical tackling, ball progression, and physical power."
+      },
+      {
+        rank: 61, name: "Andrea Pirlo", country: "Italy", pos: "MID", posFull: "Deep-Lying Playmaker", era: "Modern",
+        scores: { output: 3.40, creation: 4.85, technical: 4.75, biggame: 4.60, athletic: 3.60 },
+        careerScore: 4.30, careerX: 91.0, careerY: 92.0, careerD: 12.04,
+        peakSeason: "2005–06 (World Cup Winner & UCL Master)", peakScore: 4.38, peakX: 91.5, peakY: 95.5, peakD: 9.60,
+        desc: "'L'Architetto'. Master of tempo control, long-range diagonal passes, and dead-ball set pieces. 2006 World Cup & 2x UCL winner."
+      },
+      {
+        rank: 62, name: "Toni Kroos", country: "Germany", pos: "MID", posFull: "Central Metronome", era: "Modern",
+        scores: { output: 3.35, creation: 4.85, technical: 4.70, biggame: 4.75, athletic: 3.80 },
+        careerScore: 4.32, careerX: 90.5, careerY: 95.0, careerD: 10.74,
+        peakSeason: "2013–14 (World Cup Winner & Bayern)", peakScore: 4.37, peakX: 90.0, peakY: 97.5, peakD: 10.31,
+        desc: "6-time Champions League winner, 2014 World Cup winner. Career passing accuracy over 93% in pressure situations across 15 years."
+      },
+      {
+        rank: 63, name: "Sergio Busquets", country: "Spain", pos: "MID", posFull: "Single-Pivot Midfielder", era: "Modern",
+        scores: { output: 2.80, creation: 4.70, technical: 4.50, biggame: 4.75, athletic: 3.80 },
+        careerScore: 4.18, careerX: 88.5, careerY: 95.5, careerD: 12.35,
+        peakSeason: "2010–11 (Barcelona Treble & World Cup)", peakScore: 4.23, peakX: 88.0, peakY: 97.0, peakD: 12.37,
+        desc: "The premier single-pivot anchor of modern football. 3 Champions League titles, 2010 World Cup, 2012 Euro winner."
+      },
+      {
+        rank: 64, name: "Clarence Seedorf", country: "Netherlands", pos: "MID", posFull: "Complete Midfielder", era: "Modern",
+        scores: { output: 3.80, creation: 4.40, technical: 4.50, biggame: 4.65, athletic: 4.40 },
+        careerScore: 4.31, careerX: 91.0, careerY: 93.0, careerD: 11.40,
+        peakSeason: "2006–07 (AC Milan Champions League)", peakScore: 4.39, peakX: 92.0, peakY: 96.0, peakD: 8.94,
+        desc: "Only player in history to win the UEFA Champions League with three different clubs (Ajax, Real Madrid, AC Milan twice)."
+      },
+      {
+        rank: 65, name: "Paul Scholes", country: "England", pos: "MID", posFull: "Deep-Lying Midfielder", era: "Modern",
+        scores: { output: 4.10, creation: 4.65, technical: 4.60, biggame: 4.30, athletic: 3.90 },
+        careerScore: 4.31, careerX: 91.5, careerY: 90.5, careerD: 12.75,
+        peakSeason: "1998–99 (Manchester United Treble)", peakScore: 4.36, peakX: 92.0, peakY: 93.5, peakD: 10.31,
+        desc: "11 Premier League titles, 2 Champions Leagues. Celebrated by Zidane and Xavi as the greatest passing midfielder of his era."
+      },
+      {
+        rank: 66, name: "Steven Gerrard", country: "England", pos: "MID", posFull: "Box-to-Box Midfielder", era: "Modern",
+        scores: { output: 4.25, creation: 4.45, technical: 4.25, biggame: 4.70, athletic: 4.55 },
+        careerScore: 4.36, careerX: 91.8, careerY: 92.5, careerD: 11.16,
+        peakSeason: "2004–05 (Istanbul Miracle Captain)", peakScore: 4.48, peakX: 93.5, peakY: 96.5, peakD: 7.38,
+        desc: "Only player to score in a Champions League, UEFA Cup, FA Cup, and League Cup Final. Iconic Istanbul 2005 comeback captain."
+      },
+      {
+        rank: 67, name: "Frank Lampard", country: "England", pos: "MID", posFull: "Goalscoring Midfielder", era: "Modern",
+        scores: { output: 4.50, creation: 4.20, technical: 4.10, biggame: 4.40, athletic: 4.35 },
+        careerScore: 4.31, careerX: 92.0, careerY: 89.0, careerD: 13.60,
+        peakSeason: "2009–10 (22 Premier League Goals)", peakScore: 4.45, peakX: 94.0, peakY: 92.0, peakD: 10.00,
+        desc: "All-time top scorer for Chelsea (211 goals) from central midfield. 2005 Ballon d'Or Silver Award."
+      },
+      {
+        rank: 68, name: "Pavel Nedvěd", country: "Czech Republic", pos: "MID", posFull: "Wide Midfielder", era: "Modern",
+        scores: { output: 4.20, creation: 4.40, technical: 4.30, biggame: 4.35, athletic: 4.70 },
+        careerScore: 4.33, careerX: 91.5, careerY: 90.0, careerD: 13.12,
+        peakSeason: "2002–03 (Ballon d'Or Winner)", peakScore: 4.49, peakX: 93.5, peakY: 94.5, peakD: 8.51,
+        desc: "2003 Ballon d'Or winner. Unrelenting two-footed long-range shooting and stamina for Lazio, Juventus, and Czech Republic."
+      },
+      {
+        rank: 69, name: "Rivaldo", country: "Brazil", pos: "ATT", posFull: "Attacking Midfielder / Forward", era: "Modern",
+        scores: { output: 4.55, creation: 4.35, technical: 4.70, biggame: 4.45, athletic: 4.20 },
+        careerScore: 4.43, careerX: 94.5, careerY: 87.0, careerD: 14.12,
+        peakSeason: "1998–99 (Ballon d'Or & Bicycle Kick Hat-trick)", peakScore: 4.60, peakX: 96.0, peakY: 94.0, peakD: 7.21,
+        desc: "1999 Ballon d'Or winner, 2002 World Cup winner (5 goals). Famous bicycle kick hat-trick against Valencia."
+      },
+      {
+        rank: 70, name: "Hristo Stoichkov", country: "Bulgaria", pos: "ATT", posFull: "Forward / Winger", era: "Retro",
+        scores: { output: 4.50, creation: 4.25, technical: 4.35, biggame: 4.40, athletic: 4.30 },
+        careerScore: 4.35, careerX: 92.5, careerY: 88.0, careerD: 14.14,
+        peakSeason: "1993–94 (Ballon d'Or & WC Golden Boot)", peakScore: 4.52, peakX: 94.5, peakY: 93.5, peakD: 8.51,
+        desc: "1994 Ballon d'Or winner. Key star of Cruyff's Barcelona Dream Team and Bulgaria's historic 1994 World Cup semi-final run."
+      },
+      {
+        rank: 71, name: "George Weah", country: "Liberia", pos: "ATT", posFull: "Striker", era: "Retro",
+        scores: { output: 4.35, creation: 4.10, technical: 4.50, biggame: 4.20, athletic: 4.80 },
+        careerScore: 4.32, careerX: 92.0, careerY: 86.0, careerD: 16.12,
+        peakSeason: "1994–95 (Only African Ballon d'Or Winner)", peakScore: 4.48, peakX: 94.0, peakY: 91.5, peakD: 10.31,
+        desc: "First and only African player to win the FIFA World Player of the Year & Ballon d'Or (1995). Iconic coast-to-coast solo goal vs Verona."
+      },
+      {
+        rank: 72, name: "Juan Román Riquelme", country: "Argentina", pos: "MID", posFull: "Classic Number 10", era: "Modern",
+        scores: { output: 3.80, creation: 4.90, technical: 4.80, biggame: 4.15, athletic: 3.40 },
+        careerScore: 4.25, careerX: 91.0, careerY: 85.0, careerD: 17.49,
+        peakSeason: "2006–07 (Boca Juniors Copa Libertadores Carry)", peakScore: 4.47, peakX: 93.0, peakY: 94.0, peakD: 9.22,
+        desc: "The ultimate classic enganche. Single-handedly dominated the 2007 Copa Libertadores and led Villarreal to 2006 UCL semi-finals."
+      },
+      {
+        rank: 73, name: "Gheorghe Hagi", country: "Romania", pos: "MID", posFull: "Attacking Playmaker", era: "Retro",
+        scores: { output: 4.25, creation: 4.60, technical: 4.70, biggame: 4.10, athletic: 3.80 },
+        careerScore: 4.30, careerX: 92.0, careerY: 85.5, careerD: 16.56,
+        peakSeason: "1993–94 (World Cup Quarter-Final Carry)", peakScore: 4.45, peakX: 93.5, peakY: 92.5, peakD: 9.90,
+        desc: "'The Maradona of the Carpathians'. Long-range lob wizard, lead Romania to 1994 World Cup QF and Galatasaray to 2000 UEFA Cup."
+      },
+      {
+        rank: 74, name: "Eric Cantona", country: "France", pos: "ATT", posFull: "Forward / Catalyst", era: "Retro",
+        scores: { output: 4.10, creation: 4.50, technical: 4.40, biggame: 4.30, athletic: 4.10 },
+        careerScore: 4.28, careerX: 90.5, careerY: 87.0, careerD: 16.12,
+        peakSeason: "1995–96 (Man United Double & FWA Player of Year)", peakScore: 4.38, peakX: 92.0, peakY: 91.0, peakD: 12.04,
+        desc: "'King Eric'. The talismanic catalyst behind Manchester United's 1990s Premier League dynasty."
+      },
+      {
+        rank: 75, name: "Alan Shearer", country: "England", pos: "ATT", posFull: "Striker", era: "Retro",
+        scores: { output: 4.75, creation: 3.40, technical: 3.85, biggame: 4.20, athletic: 4.30 },
+        careerScore: 4.25, careerX: 91.5, careerY: 85.0, careerD: 17.23,
+        peakSeason: "1994–95 (Blackburn Title - 34 Premier League Goals)", peakScore: 4.41, peakX: 94.0, peakY: 88.0, peakD: 13.42,
+        desc: "All-time Premier League top goalscorer with 260 goals. Thunderous aerial ability and penalty box finishing."
+      },
+      {
+        rank: 76, name: "Ruud van Nistelrooy", country: "Netherlands", pos: "ATT", posFull: "Penalty Box Striker", era: "Modern",
+        scores: { output: 4.70, creation: 3.30, technical: 3.90, biggame: 4.25, athletic: 4.20 },
+        careerScore: 4.22, careerX: 91.0, careerY: 84.5, careerD: 17.85,
+        peakSeason: "2002–03 (44 Goals in 52 Games)", peakScore: 4.42, peakX: 94.0, peakY: 88.5, peakD: 12.97,
+        desc: "One of the most clinical box finishers in UCL history (56 goals). 3x Champions League top scorer."
+      },
+      {
+        rank: 77, name: "Dani Alves", country: "Brazil", pos: "DEF", posFull: "Right-Back / Wing-Back", era: "Modern",
+        scores: { output: 3.20, creation: 4.55, technical: 4.40, biggame: 4.60, athletic: 4.60 },
+        careerScore: 4.21, careerX: 89.5, careerY: 96.0, careerD: 11.24,
+        peakSeason: "2008–09 (Barcelona Treble & 18 Assists)", peakScore: 4.28, peakX: 90.0, peakY: 97.0, peakD: 10.44,
+        desc: "Most decorated player in senior professional football history (43 trophies). Unmatched right-flank progression with Messi."
+      },
+      {
+        rank: 78, name: "Philipp Lahm", country: "Germany", pos: "DEF", posFull: "Full-Back / Midfielder", era: "Modern",
+        scores: { output: 2.80, creation: 4.40, technical: 4.35, biggame: 4.75, athletic: 4.40 },
+        careerScore: 4.13, careerX: 88.5, careerY: 95.5, careerD: 12.35,
+        peakSeason: "2013–14 (World Cup Winning Captain)", peakScore: 4.19, peakX: 88.0, peakY: 97.5, peakD: 12.26,
+        desc: "Captained Germany to 2014 World Cup and Bayern to 2013 Treble. Never received a red card in 700+ professional matches."
+      },
+      {
+        rank: 79, name: "Javier Zanetti", country: "Argentina", pos: "DEF", posFull: "Utility Full-Back / Midfielder", era: "Modern",
+        scores: { output: 2.70, creation: 4.10, technical: 4.00, biggame: 4.65, athletic: 4.85 },
+        careerScore: 4.05, careerX: 87.0, careerY: 97.0, careerD: 13.34,
+        peakSeason: "2009–10 (Inter Milan Treble Captain)", peakScore: 4.10, peakX: 87.0, peakY: 98.0, peakD: 13.15,
+        desc: "'El Tractor'. Played 1,114 professional matches, captained Inter Milan to 2010 Treble at age 36."
+      },
+      {
+        rank: 80, name: "Fabio Cannavaro", country: "Italy", pos: "DEF", posFull: "Center-Back", era: "Modern",
+        scores: { output: 2.50, creation: 3.70, technical: 3.60, biggame: 4.90, athletic: 4.75 },
+        careerScore: 3.98, careerX: 87.0, careerY: 95.5, careerD: 13.76,
+        peakSeason: "2005–06 (World Cup Captain & Ballon d'Or)", peakScore: 4.08, peakX: 87.5, peakY: 99.0, peakD: 12.54,
+        desc: "One of only three defenders to win the Ballon d'Or (2006). Captained Italy to World Cup victory, nickname 'The Berlin Wall'."
+      },
+      {
+        rank: 81, name: "Alessandro Nesta", country: "Italy", pos: "DEF", posFull: "Center-Back", era: "Modern",
+        scores: { output: 2.40, creation: 4.00, technical: 4.10, biggame: 4.70, athletic: 4.50 },
+        careerScore: 3.96, careerX: 86.5, careerY: 95.0, careerD: 14.40,
+        peakSeason: "2002–03 (AC Milan Champions League)", peakScore: 4.02, peakX: 86.0, peakY: 97.0, peakD: 14.32,
+        desc: "Pure tackling elegance. 2 Champions League titles, 2006 World Cup winner, celebrated for perfect slide-tackle timing."
+      },
+      {
+        rank: 82, name: "Giorgio Chiellini", country: "Italy", pos: "DEF", posFull: "Center-Back", era: "Modern",
+        scores: { output: 2.60, creation: 3.50, technical: 3.40, biggame: 4.75, athletic: 4.60 },
+        careerScore: 3.88, careerX: 86.0, careerY: 94.0, careerD: 15.23,
+        peakSeason: "2020–21 (Euro 2020 Winning Captain)", peakScore: 3.92, peakX: 85.5, peakY: 96.0, peakD: 15.04,
+        desc: "Captained Italy to Euro 2020 victory, 9 consecutive Serie A titles with Juventus. Master of penalty-box defending."
+      },
+      {
+        rank: 83, name: "Carles Puyol", country: "Spain", pos: "DEF", posFull: "Center-Back", era: "Modern",
+        scores: { output: 2.60, creation: 3.60, technical: 3.50, biggame: 4.85, athletic: 4.60 },
+        careerScore: 3.94, careerX: 86.5, careerY: 95.0, careerD: 14.40,
+        peakSeason: "2008–09 (Barcelona Sextuple Captain)", peakScore: 4.01, peakX: 86.0, peakY: 97.0, peakD: 14.32,
+        desc: "'El Capità'. Heart and soul of Barcelona's golden era (3 UCLs) and Spain's 2010 World Cup winning team."
+      },
+      {
+        rank: 84, name: "Virgil van Dijk", country: "Netherlands", pos: "DEF", posFull: "Center-Back", era: "Modern",
+        scores: { output: 3.10, creation: 4.00, technical: 3.90, biggame: 4.60, athletic: 4.80 },
+        careerScore: 4.04, careerX: 88.0, careerY: 93.0, careerD: 13.89,
+        peakSeason: "2018–19 (UEFA Men's Player of the Year)", peakScore: 4.15, peakX: 89.0, peakY: 96.5, peakD: 11.54,
+        desc: "2019 UEFA Player of the Year & Ballon d'Or runner-up. Went 65 consecutive matches without being dribbled past."
+      },
+      {
+        rank: 85, name: "Dino Zoff", country: "Italy", pos: "GK", posFull: "Goalkeeper", era: "Retro",
+        scores: { output: 2.60, creation: 3.80, technical: 3.40, biggame: 4.75, athletic: 4.50 },
+        careerScore: 3.82, careerX: 86.0, careerY: 96.0, careerD: 14.56,
+        peakSeason: "1981–82 (World Cup Captain at Age 40)", peakScore: 3.87, peakX: 86.0, peakY: 97.5, peakD: 14.22,
+        desc: "Oldest winner of the World Cup in history (captained Italy in 1982 at age 40). Went 1,142 minutes without conceding a goal internationally."
+      },
+      {
+        rank: 86, name: "Peter Schmeichel", country: "Denmark", pos: "GK", posFull: "Goalkeeper", era: "Retro",
+        scores: { output: 2.80, creation: 3.90, technical: 3.50, biggame: 4.70, athletic: 4.75 },
+        careerScore: 3.88, careerX: 87.0, careerY: 93.0, careerD: 14.76,
+        peakSeason: "1998–99 (Manchester United Treble Captain)", peakScore: 3.93, peakX: 87.0, peakY: 95.5, peakD: 13.76,
+        desc: "Captained Manchester United to the 1999 Treble. Led Denmark to Euro 1992 glory with famous star-jump saves."
+      },
+      {
+        rank: 87, name: "Edwin van der Sar", country: "Netherlands", pos: "GK", posFull: "Goalkeeper", era: "Modern",
+        scores: { output: 2.50, creation: 4.30, technical: 3.80, biggame: 4.65, athletic: 4.40 },
+        careerScore: 3.86, careerX: 86.5, careerY: 95.5, careerD: 14.24,
+        peakSeason: "2008–09 (1,311 Consecutive Clean Sheet Mins)", peakScore: 3.91, peakX: 86.5, peakY: 97.0, peakD: 13.82,
+        desc: "2 Champions League titles 13 years apart (Ajax 1995, Man Utd 2008). World record 1,311 consecutive minutes without conceding."
+      },
+      {
+        rank: 88, name: "Oliver Kahn", country: "Germany", pos: "GK", posFull: "Goalkeeper", era: "Modern",
+        scores: { output: 2.50, creation: 3.60, technical: 3.20, biggame: 4.75, athletic: 4.75 },
+        careerScore: 3.80, careerX: 86.0, careerY: 95.0, careerD: 14.87,
+        peakSeason: "2001–02 (Only GK World Cup Golden Ball Winner)", peakScore: 3.88, peakX: 86.5, peakY: 97.5, peakD: 13.73,
+        desc: "'Der Titan'. Only goalkeeper in history to win the FIFA World Cup Golden Ball (2002). 8 Bundesliga titles & 2001 UCL hero."
+      },
+      {
+        rank: 89, name: "Gordon Banks", country: "England", pos: "GK", posFull: "Goalkeeper", era: "Classic",
+        scores: { output: 2.50, creation: 3.70, technical: 3.30, biggame: 4.70, athletic: 4.60 },
+        careerScore: 3.80, careerX: 86.0, careerY: 94.0, careerD: 15.23,
+        peakSeason: "1965–66 (World Cup Winner)", peakScore: 3.84, peakX: 85.5, peakY: 96.0, peakD: 15.04,
+        desc: "1966 World Cup winner. Produced the 'Save of the Century' to deny Pelé's header at the 1970 World Cup."
+      },
+      {
+        rank: 90, name: "Raymond Kopa", country: "France", pos: "ATT", posFull: "Attacking Playmaker", era: "Classic",
+        scores: { output: 4.20, creation: 4.55, technical: 4.70, biggame: 4.30, athletic: 3.90 },
+        careerScore: 4.31, careerX: 92.0, careerY: 86.0, careerD: 16.12,
+        peakSeason: "1957–58 (Ballon d'Or Winner)", peakScore: 4.41, peakX: 93.5, peakY: 91.5, peakD: 10.68,
+        desc: "1958 Ballon d'Or winner. 3 European Cups with Real Madrid alongside Di Stéfano and Puskás."
+      },
+      {
+        rank: 91, name: "Just Fontaine", country: "France", pos: "ATT", posFull: "Striker", era: "Classic",
+        scores: { output: 4.85, creation: 3.40, technical: 3.90, biggame: 4.30, athletic: 4.30 },
+        careerScore: 4.28, careerX: 92.5, careerY: 83.5, careerD: 18.12,
+        peakSeason: "1957–58 (13 Goals in Single World Cup)", peakScore: 4.52, peakX: 95.5, peakY: 89.0, peakD: 11.88,
+        desc: "All-time record holder for most goals scored in a single World Cup tournament (13 goals in 6 games in 1958)."
+      },
+      {
+        rank: 92, name: "Sándor Kocsis", country: "Hungary", pos: "ATT", posFull: "Inside Forward / Striker", era: "Classic",
+        scores: { output: 4.80, creation: 3.50, technical: 4.10, biggame: 4.30, athletic: 4.40 },
+        careerScore: 4.30, careerX: 92.8, careerY: 84.0, careerD: 17.55,
+        peakSeason: "1953–54 (11 Goals in 5 WC Matches)", peakScore: 4.48, peakX: 95.0, peakY: 89.5, peakD: 11.63,
+        desc: "'Golden Head'. 75 goals in 68 caps for Hungary (1.10 per match). Star striker of the Mighty Magyars."
+      },
+      {
+        rank: 93, name: "Stanley Matthews", country: "England", pos: "ATT", posFull: "Right Winger", era: "Classic",
+        scores: { output: 3.80, creation: 4.70, technical: 4.80, biggame: 4.00, athletic: 4.20 },
+        careerScore: 4.23, careerX: 91.0, careerY: 84.0, careerD: 18.35,
+        peakSeason: "1955–56 (First Ever Ballon d'Or Winner)", peakScore: 4.30, peakX: 92.0, peakY: 88.0, peakD: 14.42,
+        desc: "'The Wizard of the Dribble'. First Ballon d'Or winner in history (1956 at age 41). Played top-flight football until age 50."
+      },
+      {
+        rank: 94, name: "Kenny Dalglish", country: "Scotland", pos: "ATT", posFull: "Second Striker", era: "Retro",
+        scores: { output: 4.30, creation: 4.40, technical: 4.30, biggame: 4.45, athletic: 4.00 },
+        careerScore: 4.30, careerX: 91.5, careerY: 87.5, careerD: 15.11,
+        peakSeason: "1977–78 (European Cup Winning Goal)", peakScore: 4.38, peakX: 92.5, peakY: 91.0, peakD: 11.66,
+        desc: "'King Kenny'. Icon of Liverpool's European dominance, winning 3 European Cups and 6 First Division titles."
+      },
+      {
+        rank: 95, name: "Michael Ballack", country: "Germany", pos: "MID", posFull: "Box-to-Box Midfielder", era: "Modern",
+        scores: { output: 4.10, creation: 4.20, technical: 4.10, biggame: 4.30, athletic: 4.60 },
+        careerScore: 4.22, careerX: 90.5, careerY: 88.0, careerD: 15.28,
+        peakSeason: "2001–02 (Bayer Leverkusen Quad-Runner Up)", peakScore: 4.35, peakX: 92.0, peakY: 91.5, peakD: 11.66,
+        desc: "Complete German midfield powerhouse. Scored 42 goals in 98 caps, led Germany to 2002 World Cup Final."
+      },
+      {
+        rank: 96, name: "Paul Breitner", country: "Germany", pos: "DEF", posFull: "Left-Back / Midfielder", era: "Classic",
+        scores: { output: 3.80, creation: 4.20, technical: 4.10, biggame: 4.65, athletic: 4.30 },
+        careerScore: 4.18, careerX: 89.5, careerY: 92.0, careerD: 13.20,
+        peakSeason: "1973–74 (World Cup Final Goalscorer)", peakScore: 4.24, peakX: 90.0, peakY: 95.0, peakD: 11.18,
+        desc: "One of only 5 players to score in two separate World Cup Finals (1974 penalty & 1982). Won Euro 72 & World Cup 74."
+      },
+      {
+        rank: 97, name: "Paolo Rossi", country: "Italy", pos: "ATT", posFull: "Striker", era: "Retro",
+        scores: { output: 4.50, creation: 3.40, technical: 3.90, biggame: 4.80, athletic: 4.10 },
+        careerScore: 4.21, careerX: 91.0, careerY: 85.0, careerD: 17.49,
+        peakSeason: "1981–82 (World Cup Golden Boot & Ballon d'Or)", peakScore: 4.45, peakX: 93.5, peakY: 96.0, peakD: 7.62,
+        desc: "1982 World Cup Golden Boot, Golden Ball, and Ballon d'Or winner. Iconic hat-trick against Brazil."
+      },
+      {
+        rank: 98, name: "Teófilo Cubillas", country: "Peru", pos: "MID", posFull: "Attacking Midfielder", era: "Retro",
+        scores: { output: 4.45, creation: 4.40, technical: 4.50, biggame: 4.50, athletic: 4.15 },
+        careerScore: 4.40, careerX: 93.0, careerY: 88.5, careerD: 13.43,
+        peakSeason: "1975 (Copa América Champion & WC '70/'78 Hero)", peakScore: 4.51, peakX: 94.5, peakY: 93.0, peakD: 8.85,
+        desc: "Peru's greatest player ever. Scored 10 World Cup goals across 3 tournaments, 1975 Copa América winner, legendary free-kick specialist."
+      },
+      {
+        rank: 99, name: "Giacinto Facchetti", country: "Italy", pos: "DEF", posFull: "Attacking Left-Back / CB", era: "Classic",
+        scores: { output: 3.20, creation: 4.25, technical: 4.10, biggame: 4.75, athletic: 4.60 },
+        careerScore: 4.18, careerX: 89.0, careerY: 96.0, careerD: 11.70,
+        peakSeason: "1964–65 (Inter Grande Era & Ballon d'Or Silver)", peakScore: 4.24, peakX: 89.5, peakY: 97.5, peakD: 10.79,
+        desc: "Pioneer of the modern attacking full-back. Captained Italy to Euro 1968 title, won 2 European Cups with Inter Milan, 1965 Ballon d'Or runner-up."
+      },
+      {
+        rank: 100, name: "Gunnar Nordahl", country: "Sweden", pos: "ATT", posFull: "Goalscoring Striker", era: "Classic",
+        scores: { output: 4.85, creation: 3.30, technical: 3.90, bg: 4.30, athletic: 4.65 },
+        careerScore: 4.30, careerX: 93.5, careerY: 85.0, careerD: 16.35,
+        peakSeason: "1949–50 (35 Serie A Goals in 37 Games)", peakScore: 4.52, peakX: 96.0, peakY: 90.0, peakD: 10.77,
+        desc: "AC Milan's all-time top goalscorer (210 goals). 5-time Capocannoniere top scorer in Serie A, 1948 Olympic Gold medallist."
       }
     ];
 
@@ -1049,7 +1400,11 @@
       canvas.addEventListener('mousedown', handleMouseDown);
       canvas.addEventListener('mousemove', handleMouseMove);
       canvas.addEventListener('mouseup', handleMouseUp);
-      canvas.addEventListener('mouseleave', () => { isDragging = false; tooltip.classList.add('hidden'); });
+      canvas.addEventListener('mouseleave', () => { 
+        isDragging = false; 
+        tooltip.classList.add('hidden');
+        document.getElementById('canvasControlHint')?.classList.remove('opacity-0');
+      });
       canvas.addEventListener('wheel', handleWheel, { passive: false });
 
       // Close search auto-suggest dropdown when clicking outside
@@ -1065,6 +1420,26 @@
       renderLeaderboardTable();
 
       drawCanvas();
+    });
+
+    // Smooth Sticky Header Hide on Scroll Down & Reveal on Scroll Up / Top Hover
+    let lastScrollY = window.scrollY;
+    const headerEl = document.querySelector('header');
+
+    window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > 120 && currentScrollY > lastScrollY) {
+        headerEl.classList.add('-translate-y-full');
+      } else {
+        headerEl.classList.remove('-translate-y-full');
+      }
+      lastScrollY = currentScrollY;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (e.clientY <= 90) {
+        headerEl.classList.remove('-translate-y-full');
+      }
     });
 
     function resizeCanvas() {
@@ -1235,9 +1610,9 @@
       ['career', 'peak', 'compare', 'table'].forEach(t => {
         const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
         if (t === tab) {
-          btn.className = "tactical-tab tactical-tab-active px-5 py-2.5 rounded-xl text-xs flex items-center gap-2 transition font-mono";
+          btn.className = "tactical-tab tactical-tab-active px-3 sm:px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition font-mono whitespace-nowrap";
         } else {
-          btn.className = "tactical-tab text-slate-400 hover:text-white px-5 py-2.5 rounded-xl text-xs font-extrabold flex items-center gap-2 transition font-mono";
+          btn.className = "tactical-tab text-slate-400 hover:text-white px-3 sm:px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition font-mono whitespace-nowrap";
         }
       });
 
@@ -1565,18 +1940,30 @@
     }
 
     // Canvas Interactions
+    let isMouseDown = false;
+    let mouseStartScreenX = 0;
+    let mouseStartScreenY = 0;
+
     function handleMouseDown(e) {
-      isDragging = true;
+      isMouseDown = true;
+      isDragging = false;
+      mouseStartScreenX = e.clientX;
+      mouseStartScreenY = e.clientY;
       dragStartX = e.clientX - panOffsetX;
       dragStartY = e.clientY - panOffsetY;
     }
 
     function handleMouseMove(e) {
-      if (isDragging) {
-        panOffsetX = e.clientX - dragStartX;
-        panOffsetY = e.clientY - dragStartY;
-        drawCanvas();
-        return;
+      if (isMouseDown) {
+        const moveDist = Math.hypot(e.clientX - mouseStartScreenX, e.clientY - mouseStartScreenY);
+        if (moveDist > 4) {
+          isDragging = true;
+          document.getElementById('canvasControlHint')?.classList.add('opacity-0');
+          panOffsetX = e.clientX - dragStartX;
+          panOffsetY = e.clientY - dragStartY;
+          drawCanvas();
+          return;
+        }
       }
 
       const rect = canvas.getBoundingClientRect();
@@ -1618,7 +2005,7 @@
         const cy = mapY(pY);
 
         const dist = Math.hypot(mouseX - cx, mouseY - cy);
-        if (dist <= 12) {
+        if (dist <= 14) {
           hoveredPlayer = player;
           break;
         }
@@ -1647,12 +2034,16 @@
     }
 
     function handleMouseUp(e) {
-      if (isDragging) {
-        isDragging = false;
-        
+      const moveDist = Math.hypot(e.clientX - mouseStartScreenX, e.clientY - mouseStartScreenY);
+      isMouseDown = false;
+      isDragging = false;
+      document.getElementById('canvasControlHint')?.classList.remove('opacity-0');
+
+      // Reliable node click registration (triggers if cursor moved <= 5px)
+      if (moveDist <= 5) {
         const rect = canvas.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
+        const clickX = e.clientX - rect.left;
+        const clickY = e.clientY - rect.top;
 
         const parent = canvas.parentElement;
         const width = parent.clientWidth;
@@ -1680,6 +2071,8 @@
         }
 
         const filtered = getFilteredPlayers();
+        let closestPlayer = null;
+        let minDistance = Infinity;
 
         for (let player of filtered) {
           const pX = currentTab === 'career' ? player.careerX : player.peakX;
@@ -1687,13 +2080,17 @@
           const cx = mapX(pX);
           const cy = mapY(pY);
 
-          const dist = Math.hypot(mouseX - cx, mouseY - cy);
-          if (dist <= 12) {
-            const originalIdx = playersData.findIndex(p => p.rank === player.rank);
-            updateSelectedPlayerSidebar(originalIdx);
-            drawCanvas();
-            break;
+          const dist = Math.hypot(clickX - cx, clickY - cy);
+          if (dist <= 20 && dist < minDistance) {
+            minDistance = dist;
+            closestPlayer = player;
           }
+        }
+
+        if (closestPlayer) {
+          const originalIdx = playersData.findIndex(p => p.rank === closestPlayer.rank);
+          updateSelectedPlayerSidebar(originalIdx);
+          drawCanvas();
         }
       }
     }
