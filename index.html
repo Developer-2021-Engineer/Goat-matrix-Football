@@ -1,0 +1,1936 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THE GOAT MATRIX: Tactical Football Analytics & The Search for Perfection</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            pitch: {
+              bg: '#080a10',
+              card: 'rgba(15, 19, 32, 0.94)',
+              panel: 'rgba(20, 26, 44, 0.96)',
+              border: 'rgba(255, 255, 255, 0.12)',
+              emerald: '#10b981',
+              gold: '#fbbf24',
+              crimson: '#f43f5e',
+              cyan: '#06b6d4'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Syne', 'sans-serif'],
+            urban: ['Bebas Neue', 'sans-serif'],
+            mono: ['Space Grotesk', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #080a10;
+      color: #f1f5f9;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    .tactical-card {
+      background: rgba(15, 19, 32, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65);
+    }
+
+    .tactical-card-gold {
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.12) 0%, rgba(15, 19, 32, 0.96) 100%);
+      border: 1.5px solid rgba(251, 191, 36, 0.45);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+    }
+
+    .tactical-tab {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      transition: all 0.2s ease-out;
+    }
+
+    .tactical-tab-active {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.32) 0%, rgba(16, 185, 129, 0.32) 100%);
+      border-color: #06b6d4;
+      color: #ffffff;
+      font-weight: 800;
+      box-shadow: 0 0 12px rgba(6, 182, 212, 0.35);
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #080a10;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.22);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #06b6d4;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-200 flex flex-col antialiased selection:bg-cyan-500 selection:text-black">
+
+  <!-- TOP NAVIGATION HEADER -->
+  <header class="sticky top-0 z-40 w-full border-b border-white/10 bg-[#080a10]/95 backdrop-blur-xl px-6 lg:px-12 py-4">
+    <div class="max-w-[1440px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-5">
+      
+      <!-- Brand Block -->
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 via-cyan-500 to-amber-400 p-0.5 shadow-lg flex items-center justify-center shrink-0">
+          <div class="w-full h-full bg-[#080a10] rounded-[14px] flex items-center justify-center text-amber-400">
+            <i class="fa-solid fa-futbol text-xl"></i>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center gap-3">
+            <h1 class="text-2xl lg:text-3xl font-extrabold font-display tracking-tight text-white">
+              THE GOAT MATRIX
+            </h1>
+            <span class="px-3 py-0.5 text-[10px] font-extrabold font-mono tracking-widest text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 rounded-full uppercase">
+              100% Real Match Archives
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 font-medium mt-0.5 flex items-center gap-2">
+            <span>Opta • StatsBomb • FBref Archives</span>
+            <span class="text-slate-600">•</span>
+            <span class="text-amber-400 font-mono font-bold">Zero Video Game Bias</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Main Navigation Tabs -->
+      <div class="flex items-center gap-2 bg-slate-900/90 p-1.5 rounded-2xl border border-white/10">
+        <button id="tabCareer" onclick="switchTab('career')" class="tactical-tab tactical-tab-active px-5 py-2.5 rounded-xl text-xs flex items-center gap-2 transition font-mono">
+          <i class="fa-solid fa-chart-line text-sm"></i> Overall Career GOAT
+        </button>
+        <button id="tabPeak" onclick="switchTab('peak')" class="tactical-tab text-slate-400 hover:text-white px-5 py-2.5 rounded-xl text-xs font-extrabold flex items-center gap-2 transition font-mono">
+          <i class="fa-solid fa-bolt text-amber-400 text-sm"></i> Peak Season
+        </button>
+        <button id="tabCompare" onclick="switchTab('compare')" class="tactical-tab text-slate-400 hover:text-white px-5 py-2.5 rounded-xl text-xs font-extrabold flex items-center gap-2 transition font-mono">
+          <i class="fa-solid fa-scale-balanced text-cyan-400 text-sm"></i> Head-to-Head
+        </button>
+        <button id="tabTable" onclick="switchTab('table')" class="tactical-tab text-slate-400 hover:text-white px-5 py-2.5 rounded-xl text-xs font-extrabold flex items-center gap-2 transition font-mono">
+          <i class="fa-solid fa-list-ol text-sm"></i> Leaderboard
+        </button>
+      </div>
+
+      <!-- Search Box with Google-Style Recommendation Dropdown -->
+      <div class="flex items-center gap-3 w-full lg:w-auto">
+        <div class="relative w-full lg:w-72" id="searchContainer">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs z-10"></i>
+          <input type="text" id="searchInput" oninput="handleSearchInput(event)" onfocus="handleSearchInput(event)" placeholder="Search legend by name..." 
+            autocomplete="off"
+            class="w-full bg-slate-900 border border-white/20 rounded-xl pl-10 pr-8 py-2 text-xs text-slate-200 placeholder-slate-400 focus:outline-none focus:border-cyan-400 font-sans transition" />
+          <button id="searchClearBtn" onclick="clearSearch()" class="hidden absolute right-3 top-2.5 text-slate-400 hover:text-white text-xs z-10">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+
+          <!-- Floating Google-Style Auto-Suggest Recommendations Dropdown (Glassmorphism) -->
+          <div id="searchSuggestions" class="hidden absolute left-0 right-0 top-full mt-2 bg-[#0c101d]/75 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.85)] ring-1 ring-white/10 overflow-y-auto max-h-60 z-50 p-2 space-y-1.5 transition-all">
+            <!-- Dynamic Suggestion Items -->
+          </div>
+        </div>
+
+        <button onclick="resetCanvasView()" title="Reset Canvas View" class="p-2.5 rounded-xl bg-slate-900 border border-white/20 hover:border-amber-400 text-slate-300 hover:text-amber-400 transition shrink-0">
+          <i class="fa-solid fa-rotate-right text-xs"></i>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- HERO STATS BANNER -->
+  <div class="max-w-[1440px] mx-auto w-full px-6 lg:px-12 mt-6">
+    <div class="tactical-card-gold rounded-2xl p-5 border border-amber-500/40 bg-slate-900/95 flex flex-col lg:flex-row items-center justify-between gap-6 shadow-xl">
+      <div class="flex items-start lg:items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/50 flex items-center justify-center text-amber-400 shrink-0 shadow-md">
+          <i class="fa-solid fa-star text-2xl"></i>
+        </div>
+        <div class="space-y-1">
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="text-xs font-black font-mono text-amber-400 uppercase tracking-wider">PERFECTION ANCHOR (100, 100)</span>
+            <span class="text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-3 py-0.5 rounded-full font-mono font-extrabold">
+              $D = \sqrt{(100 - X)^2 + (100 - Y)^2}$
+            </span>
+          </div>
+          <p class="text-xs text-slate-200 leading-relaxed max-w-4xl">
+            Symmetrical Central Crosshairs <strong class="text-cyan-400 font-mono font-bold">X-X'</strong> ($92.5$) and <strong class="text-emerald-400 font-mono font-bold">Y-Y'</strong> ($90.0$) extend by equal length to divide legends into 4 distinct tactical quadrants. Theoretical Perfection Anchor <strong class="text-amber-400 font-mono font-extrabold">(100, 100)</strong> represents 100% conversion, 100% xA creation, maximum sprint speed, and flawless title leverage.
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Benchmark Stats -->
+      <div class="flex items-center gap-6 shrink-0 border-t lg:border-t-0 lg:border-l border-white/10 pt-4 lg:pt-0 lg:pl-6 w-full lg:w-auto justify-between lg:justify-start font-mono">
+        <div class="text-center">
+          <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Shortest Career Dist D</div>
+          <div class="text-sm font-extrabold text-cyan-400 flex items-center justify-center gap-1.5 mt-0.5">
+            <i class="fa-solid fa-crown text-amber-400 text-xs"></i> L. Messi <span class="text-xs text-amber-400">(D = 1.70)</span>
+          </div>
+        </div>
+        <div class="text-center">
+          <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Shortest Peak Dist D</div>
+          <div class="text-sm font-extrabold text-emerald-400 flex items-center justify-center gap-1.5 mt-0.5">
+            <i class="fa-solid fa-bolt text-amber-400 text-xs"></i> Messi '11-12 <span class="text-xs text-amber-400">(D = 0.82)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1 max-w-[1440px] mx-auto w-full px-6 lg:px-12 py-6 space-y-6">
+
+    <!-- TOOLBAR FILTERS -->
+    <div class="flex flex-wrap items-center justify-between gap-4 tactical-card p-4 rounded-2xl border border-white/10">
+      
+      <!-- Role Filters -->
+      <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
+        <span class="font-bold text-slate-300 uppercase text-[11px] tracking-wider mr-2">Positional Role:</span>
+        <button onclick="setPosFilter('ALL')" id="pos-ALL" class="pos-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">All Roles (50)</button>
+        <button onclick="setPosFilter('ATT')" id="pos-ATT" class="pos-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800 border border-transparent">Forwards (18)</button>
+        <button onclick="setPosFilter('MID')" id="pos-MID" class="pos-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800 border border-transparent">Midfielders (16)</button>
+        <button onclick="setPosFilter('DEF')" id="pos-DEF" class="pos-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800 border border-transparent">Defenders (12)</button>
+        <button onclick="setPosFilter('GK')" id="pos-GK" class="pos-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800 border border-transparent">Goalkeepers (4)</button>
+      </div>
+
+      <!-- Era Filters -->
+      <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
+        <span class="font-bold text-slate-300 uppercase text-[11px] tracking-wider mr-2">Era:</span>
+        <button onclick="setEraFilter('ALL')" id="era-ALL" class="era-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-white border border-slate-700">All Eras</button>
+        <button onclick="setEraFilter('Classic')" id="era-Classic" class="era-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800 border border-transparent">Classic (1950-70s)</button>
+        <button onclick="setEraFilter('Retro')" id="era-Retro" class="era-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800 border border-transparent">Retro (1980-90s)</button>
+        <button onclick="setEraFilter('Modern')" id="era-Modern" class="era-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800 border border-transparent">Modern (2000s+)</button>
+      </div>
+
+      <!-- View & Zoom Controls -->
+      <div class="flex items-center gap-3 text-xs font-mono border-t sm:border-t-0 sm:border-l border-white/10 pt-2 sm:pt-0 sm:pl-4">
+        <button onclick="zoomCanvas(1.15)" title="Zoom In" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-white/20 hover:border-cyan-400 text-slate-200 font-bold">
+          <i class="fa-solid fa-magnifying-glass-plus"></i>
+        </button>
+        <button onclick="zoomCanvas(0.85)" title="Zoom Out" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-white/20 hover:border-cyan-400 text-slate-200 font-bold">
+          <i class="fa-solid fa-magnifying-glass-minus"></i>
+        </button>
+        <label class="flex items-center gap-2 cursor-pointer text-slate-200 font-bold">
+          <input type="checkbox" id="toggleNames" checked onchange="drawCanvas()" class="accent-amber-400 rounded w-4 h-4">
+          <span>Labels</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer text-slate-200 font-bold">
+          <input type="checkbox" id="toggleDistanceRings" checked onchange="drawCanvas()" class="accent-cyan-400 rounded w-4 h-4">
+          <span>Rings</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- GRAPH VIEW CONTAINER (Canvas + Selected Player Sidebar) -->
+    <div id="graphViewContainer" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Canvas Viewport (8 Cols) -->
+      <div class="lg:col-span-8 tactical-card rounded-3xl p-6 relative flex flex-col h-[720px] overflow-hidden border border-white/10 shadow-2xl bg-[#080a10]">
+        
+        <!-- Header Overlay -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-white/10 pb-3 mb-2 z-10 gap-3">
+          <div>
+            <h3 id="graphTitle" class="text-base font-extrabold text-amber-400 font-display tracking-wider uppercase flex items-center gap-2">
+              <i class="fa-solid fa-chart-line"></i> Overall Career GOAT Model
+            </h3>
+            <p id="graphSubtitle" class="text-xs text-slate-300 font-sans font-medium">
+              Symmetrical Central Crosshairs X-X' (92.5) & Y-Y' (90.0) | Equal Length Axis Lines
+            </p>
+          </div>
+          
+          <!-- Role Badges -->
+          <div class="flex items-center gap-2 font-mono text-[11px]">
+            <span class="flex items-center gap-1.5 text-cyan-300 bg-cyan-950/80 px-2.5 py-0.5 rounded-lg border border-cyan-700/80 font-bold">
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 inline-block"></span> Attackers
+            </span>
+            <span class="flex items-center gap-1.5 text-emerald-300 bg-emerald-950/80 px-2.5 py-0.5 rounded-lg border border-emerald-700/80 font-bold">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span> Midfielders
+            </span>
+            <span class="flex items-center gap-1.5 text-rose-300 bg-rose-950/80 px-2.5 py-0.5 rounded-lg border border-rose-700/80 font-bold">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-400 inline-block"></span> Defenders
+            </span>
+            <span class="flex items-center gap-1.5 text-amber-300 bg-amber-950/80 px-2.5 py-0.5 rounded-lg border border-amber-700/80 font-bold">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> Goalkeepers
+            </span>
+          </div>
+        </div>
+
+        <!-- Canvas Container Frame -->
+        <div class="relative flex-1 w-full h-full bg-[#080a10] rounded-2xl border border-white/10 overflow-hidden">
+          
+          <!-- ABSOLUTE HTML VIEWPORT QUADRANT OVERLAY BADGES -->
+          <div class="absolute top-4 right-4 z-10 pointer-events-none bg-cyan-950/95 border-2 border-cyan-400 px-3.5 py-2 rounded-xl backdrop-blur-md shadow-2xl">
+            <span class="text-xs font-black font-mono text-cyan-300 uppercase tracking-wide flex items-center gap-1.5">
+              <i class="fa-solid fa-crown text-amber-400"></i> Q1: THE GOAT SPHERE
+            </span>
+            <div class="text-[10px] text-cyan-100 font-sans font-semibold mt-0.5">High Peak Output (X > 92.5) • High Longevity / Leverage (Y > 90.0)</div>
+          </div>
+
+          <div class="absolute top-4 left-4 z-10 pointer-events-none bg-emerald-950/95 border-2 border-emerald-400 px-3.5 py-2 rounded-xl backdrop-blur-md shadow-2xl">
+            <span class="text-xs font-black font-mono text-emerald-300 uppercase tracking-wide flex items-center gap-1.5">
+              <i class="fa-solid fa-shield-halved text-emerald-400"></i> Q2: ELITE LONGEVITY & CARRY
+            </span>
+            <div class="text-[10px] text-emerald-100 font-sans font-semibold mt-0.5">Lower Peak Output (X &lt; 92.5) • High Longevity / Leverage (Y > 90.0)</div>
+          </div>
+
+          <div class="absolute bottom-4 left-4 z-10 pointer-events-none bg-[#271e05] border-2 border-amber-400 px-3.5 py-2 rounded-xl backdrop-blur-md shadow-2xl">
+            <span class="text-xs font-black font-mono text-amber-300 uppercase tracking-wide flex items-center gap-1.5">
+              <i class="fa-solid fa-medal text-amber-400"></i> Q3: SOLID CONTENDERS
+            </span>
+            <div class="text-[10px] text-amber-100 font-sans font-bold mt-0.5">Lower Output (X &lt; 92.5) • Lower Longevity / Leverage (Y &lt; 90.0)</div>
+          </div>
+
+          <div class="absolute bottom-4 right-4 z-10 pointer-events-none bg-[#2e0a13] border-2 border-rose-400 px-3.5 py-2 rounded-xl backdrop-blur-md shadow-2xl">
+            <span class="text-xs font-black font-mono text-rose-300 uppercase tracking-wide flex items-center gap-1.5">
+              <i class="fa-solid fa-fire text-rose-400"></i> Q4: FLASH PEAKS / HIGH DEFICIT
+            </span>
+            <div class="text-[10px] text-rose-100 font-sans font-bold mt-0.5">Hyper Peak Output (X > 92.5) • Lower Longevity / Leverage (Y &lt; 90.0)</div>
+          </div>
+
+          <!-- Scatter Canvas -->
+          <canvas id="scatterCanvas" class="w-full h-full block cursor-grab active:cursor-grabbing bg-[#080a10]"></canvas>
+
+          <!-- Interactive Hover Tooltip -->
+          <div id="canvasTooltip" class="hidden absolute z-30 pointer-events-none tactical-card-gold p-3.5 rounded-2xl border-2 border-amber-400 shadow-2xl w-64 text-xs space-y-1.5">
+            <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
+              <span id="tooltipName" class="font-extrabold text-white text-sm font-sans">Player Name</span>
+              <span id="tooltipRank" class="bg-amber-500/30 text-amber-300 font-black font-mono px-2 py-0.5 rounded text-[10px] border border-amber-400">#1</span>
+            </div>
+            <div class="space-y-1 font-mono text-slate-200">
+              <div class="flex justify-between">
+                <span class="text-slate-400 font-sans">Role / Era:</span>
+                <span id="tooltipPos" class="font-bold text-slate-100">Forward / Modern</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400 font-sans">Score Rating:</span>
+                <span id="tooltipScore" class="font-extrabold text-cyan-300">4.88 / 5.0</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400 font-sans">Coords (X, Y):</span>
+                <span id="tooltipCoords" class="text-slate-100 font-bold">(99.2, 98.5)</span>
+              </div>
+              <div class="flex justify-between border-t border-white/10 pt-1.5 mt-1">
+                <span class="text-amber-400 font-bold font-sans">Perfection Dist D:</span>
+                <span id="tooltipDist" class="font-black text-amber-400 text-sm">D = 1.70</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Canvas Control Hint -->
+          <div class="absolute bottom-3 left-1/2 -translate-x-1/2 pointer-events-none bg-slate-900/90 px-3.5 py-1 rounded-xl text-[10px] font-mono text-slate-300 border border-white/20 flex items-center gap-2 z-20 font-bold">
+            <i class="fa-solid fa-computer-mouse text-cyan-400"></i>
+            <span>Scroll wheel to zoom • Drag to pan scatter plot</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Selected Player Inspector Sidebar (4 Cols) -->
+      <div class="lg:col-span-4 tactical-card rounded-3xl p-6 flex flex-col justify-between space-y-5 border border-white/10 shadow-2xl">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between border-b border-white/10 pb-3">
+            <h4 class="text-xs font-extrabold uppercase tracking-widest text-slate-300 font-mono flex items-center gap-2">
+              <i class="fa-solid fa-crosshair text-cyan-400"></i> Selected Legend
+            </h4>
+            <span id="sidebarRankBadge" class="text-xs font-black font-mono px-3 py-1 rounded-lg bg-cyan-950 text-cyan-300 border border-cyan-700">
+              #1 Overall
+            </span>
+          </div>
+
+          <!-- Profile Header -->
+          <div id="selectedPlayerHeader" class="space-y-1">
+            <h3 id="sidebarName" class="text-2xl font-black text-slate-100 font-display">Lionel Messi</h3>
+            <div class="flex items-center gap-3 text-xs text-slate-300 font-mono font-bold">
+              <span id="sidebarPos" class="bg-slate-800 px-2.5 py-0.5 rounded text-slate-200">False 9 / Playmaker</span>
+              <span id="sidebarEra" class="text-slate-400">Modern Era</span>
+            </div>
+          </div>
+
+          <!-- Score Cards -->
+          <div class="grid grid-cols-2 gap-3 font-mono">
+            <div class="tactical-card p-3 rounded-2xl text-center border border-white/10 space-y-0.5">
+              <div class="text-[10px] text-slate-400 font-sans uppercase font-bold tracking-wider">GOAT Score</div>
+              <div id="sidebarScore" class="text-2xl font-black text-cyan-300">4.88</div>
+            </div>
+            <div class="tactical-card-gold p-3 rounded-2xl text-center border border-amber-500/40 space-y-0.5">
+              <div class="text-[10px] text-amber-400 font-sans uppercase font-bold tracking-wider">Perfection Dist D</div>
+              <div id="sidebarDistance" class="text-2xl font-black text-amber-400">1.70</div>
+            </div>
+          </div>
+
+          <!-- Attribute Progress Meters -->
+          <div class="space-y-2.5 text-xs">
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Factual Match Attributes (0–5.0)</div>
+            
+            <div class="space-y-1">
+              <div class="flex justify-between text-slate-200 text-xs font-medium">
+                <span>Open-Play Goal Output</span>
+                <span id="attr1Val" class="font-mono font-bold text-cyan-300">4.95</span>
+              </div>
+              <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden border border-white/10">
+                <div id="attr1Bar" class="bg-cyan-400 h-full rounded-full transition-all duration-300" style="width: 99%"></div>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between text-slate-200 text-xs font-medium">
+                <span>Creation & xT Progression</span>
+                <span id="attr2Val" class="font-mono font-bold text-cyan-300">4.98</span>
+              </div>
+              <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden border border-white/10">
+                <div id="attr2Bar" class="bg-cyan-400 h-full rounded-full transition-all duration-300" style="width: 99.6%"></div>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between text-slate-200 text-xs font-medium">
+                <span>1v1 Dribble & Close Control</span>
+                <span id="attr3Val" class="font-mono font-bold text-cyan-300">5.00</span>
+              </div>
+              <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden border border-white/10">
+                <div id="attr3Bar" class="bg-cyan-400 h-full rounded-full transition-all duration-300" style="width: 100%"></div>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between text-slate-200 text-xs font-medium">
+                <span>Knockout & Title Leverage</span>
+                <span id="attr4Val" class="font-mono font-bold text-cyan-300">4.90</span>
+              </div>
+              <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden border border-white/10">
+                <div id="attr4Bar" class="bg-cyan-400 h-full rounded-full transition-all duration-300" style="width: 98%"></div>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between text-slate-200 text-xs font-medium">
+                <span>Athletic Burst & Match Load</span>
+                <span id="attr5Val" class="font-mono font-bold text-cyan-300">4.40</span>
+              </div>
+              <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden border border-white/10">
+                <div id="attr5Bar" class="bg-cyan-400 h-full rounded-full transition-all duration-300" style="width: 88%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Best Zenith Season -->
+          <div class="p-3.5 bg-gradient-to-r from-amber-950/50 to-slate-900 border border-amber-500/40 rounded-2xl space-y-1 font-mono">
+            <div class="text-[10px] text-amber-400 font-extrabold uppercase tracking-wider flex items-center gap-1.5">
+              <i class="fa-solid fa-bolt text-amber-400"></i> Best Zenith Season
+            </div>
+            <p id="sidebarPeakSeason" class="text-xs text-white font-black font-sans">2011–12 (73 Goals, 29 Assists)</p>
+            <p id="sidebarPeakDesc" class="text-[11px] text-slate-200 font-bold">
+              Coords: (99.8, 99.2) | Shortest Peak Distance D = 0.82
+            </p>
+          </div>
+        </div>
+
+        <button onclick="openPlayerModal(selectedPlayerIndex)" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 via-cyan-500 to-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg hover:brightness-110 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-expand text-sm"></i>
+          Inspect Radar & Full Real-World Stats
+        </button>
+      </div>
+    </div>
+
+    <!-- VIEW CONTAINER 3: HEAD-TO-HEAD DUEL COMPARISON -->
+    <div id="compareViewContainer" class="hidden tactical-card rounded-3xl p-6 space-y-6 border border-white/10 shadow-2xl">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/10 pb-4">
+        <div>
+          <h3 class="text-lg font-extrabold text-amber-400 font-display tracking-wider uppercase flex items-center gap-2.5">
+            <i class="fa-solid fa-scale-balanced"></i> Legend Head-to-Head Duel Comparison
+          </h3>
+          <p class="text-xs text-slate-300 mt-0.5">
+            Compare any two legends side-by-side with overlaid 5-axis radar profiles and exact metric deltas.
+          </p>
+        </div>
+
+        <!-- Legend Selectors -->
+        <div class="flex items-center gap-4 w-full md:w-auto font-mono text-xs">
+          <div class="flex-1 md:w-60">
+            <label class="text-[10px] text-cyan-400 uppercase font-bold block mb-1">Legend A (Cyan)</label>
+            <select id="compareSelectA" onchange="updateCompareView()" class="w-full bg-slate-900 border border-white/20 text-slate-100 rounded-xl px-3 py-2 focus:outline-none focus:border-cyan-400 font-sans font-bold">
+            </select>
+          </div>
+          <span class="text-rose-500 font-black mt-4 font-display text-lg">VS</span>
+          <div class="flex-1 md:w-60">
+            <label class="text-[10px] text-amber-400 uppercase font-bold block mb-1">Legend B (Gold)</label>
+            <select id="compareSelectB" onchange="updateCompareView()" class="w-full bg-slate-900 border border-white/20 text-slate-100 rounded-xl px-3 py-2 focus:outline-none focus:border-amber-400 font-sans font-bold">
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compare Cards & Overlaid Radar Chart -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <!-- Legend A Card -->
+        <div id="compareCardA" class="lg:col-span-3 tactical-card rounded-2xl p-5 text-center space-y-3 border-cyan-500/50">
+          <span class="px-2.5 py-0.5 rounded text-[10px] font-bold font-mono bg-cyan-950 text-cyan-300 border border-cyan-700 uppercase">Legend A</span>
+          <h4 id="compNameA" class="text-2xl font-black text-slate-100 font-display">Lionel Messi</h4>
+          <div id="compSeasonA" class="text-xs text-slate-300 font-mono font-bold">Peak: 2011–12 (73G, 29A)</div>
+          
+          <div class="grid grid-cols-2 gap-2 font-mono pt-2">
+            <div class="tactical-card p-2.5 rounded-xl border border-white/10">
+              <div class="text-[9px] text-slate-400 font-sans uppercase font-bold">GOAT Score</div>
+              <div id="compScoreA" class="text-lg font-extrabold text-cyan-300 mt-0.5">4.88</div>
+            </div>
+            <div class="tactical-card p-2.5 rounded-xl border border-white/10">
+              <div class="text-[9px] text-slate-400 font-sans uppercase font-bold">Perfection Dist D</div>
+              <div id="compDistA" class="text-lg font-extrabold text-amber-400 mt-0.5">1.70</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Overlaid Radar Chart -->
+        <div class="lg:col-span-6 tactical-card rounded-2xl p-4 border border-white/10 flex justify-center items-center h-[380px]">
+          <canvas id="compareRadarCanvas" class="max-h-full"></canvas>
+        </div>
+
+        <!-- Legend B Card -->
+        <div id="compareCardB" class="lg:col-span-3 tactical-card rounded-2xl p-5 text-center space-y-3 border-amber-500/50">
+          <span class="px-2.5 py-0.5 rounded text-[10px] font-bold font-mono bg-amber-950 text-amber-300 border border-amber-700 uppercase">Legend B</span>
+          <h4 id="compNameB" class="text-2xl font-black text-slate-100 font-display">Cristiano Ronaldo</h4>
+          <div id="compSeasonB" class="text-xs text-slate-300 font-mono font-bold">Peak: 2013–14 (17 UCL Goals)</div>
+          
+          <div class="grid grid-cols-2 gap-2 font-mono pt-2">
+            <div class="tactical-card p-2.5 rounded-xl border border-white/10">
+              <div class="text-[9px] text-slate-400 font-sans uppercase font-bold">GOAT Score</div>
+              <div id="compScoreB" class="text-lg font-extrabold text-amber-400 mt-0.5">4.71</div>
+            </div>
+            <div class="tactical-card p-2.5 rounded-xl border border-white/10">
+              <div class="text-[9px] text-slate-400 font-sans uppercase font-bold">Perfection Dist D</div>
+              <div id="compDistB" class="text-lg font-extrabold text-amber-400 mt-0.5">2.38</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW CONTAINER 4: SORTABLE MASTER LEADERBOARD -->
+    <div id="tableViewContainer" class="hidden tactical-card rounded-3xl p-6 border border-white/10 space-y-5 shadow-2xl">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-white/10 pb-4 gap-4">
+        <div>
+          <h3 class="text-lg font-extrabold text-amber-400 font-display tracking-wider uppercase flex items-center gap-2.5">
+            <i class="fa-solid fa-list-ol"></i> Master 50 Legends Perfection Ranking
+          </h3>
+          <p class="text-xs text-slate-300 mt-0.5">
+            Ranked by Euclidean Distance $D = \sqrt{(100-X)^2 + (100-Y)^2}$ to Theoretical Perfection Anchor $(100,100)$.
+          </p>
+        </div>
+        <div class="text-xs font-mono text-slate-200 bg-slate-900 px-3.5 py-1.5 rounded-xl border border-white/20 font-bold">
+          Filtered Count: <span id="tableCount" class="text-cyan-300 font-bold">50</span> Legends
+        </div>
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-white/10">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="tactical-card text-slate-300 font-mono border-b border-white/10 uppercase text-[10px] tracking-wider font-extrabold">
+              <th class="py-3 px-4">Rank</th>
+              <th class="py-3 px-4">Player Legend</th>
+              <th class="py-3 px-4">Position</th>
+              <th class="py-3 px-4">Era</th>
+              <th class="py-3 px-4 text-center">Output (25%)</th>
+              <th class="py-3 px-4 text-center">Creation (25%)</th>
+              <th class="py-3 px-4 text-center">Technical (20%)</th>
+              <th class="py-3 px-4 text-center">Big-Game (20%)</th>
+              <th class="py-3 px-4 text-center">Athletic (10%)</th>
+              <th class="py-3 px-4 text-center cursor-pointer hover:text-cyan-300 transition" onclick="sortTable('score')">Score <i class="fa-solid fa-sort"></i></th>
+              <th class="py-3 px-4 text-center cursor-pointer hover:text-amber-400 transition" onclick="sortTable('distance')">Distance D <i class="fa-solid fa-sort"></i></th>
+              <th class="py-3 px-4 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody" class="divide-y divide-white/10 font-sans">
+            <!-- Dynamic Table Rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- PLAYER DETAIL INSPECTOR MODAL -->
+  <div id="playerModal" class="fixed inset-0 z-50 hidden bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-6 overflow-y-auto">
+    <div class="tactical-card-gold rounded-3xl max-w-3xl w-full border border-amber-500/50 overflow-hidden shadow-2xl relative my-auto">
+      
+      <!-- Close Modal Button -->
+      <button onclick="closePlayerModal()" class="absolute top-4 right-4 text-slate-300 hover:text-amber-400 w-9 h-9 rounded-full tactical-card flex items-center justify-center transition z-10">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+
+      <div class="p-6 space-y-6">
+        <!-- Modal Header -->
+        <div class="flex items-center gap-4 border-b border-white/10 pb-4">
+          <div id="modalRankBox" class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 via-emerald-500 to-cyan-400 text-slate-950 flex items-center justify-center font-black text-xl font-mono shadow-md">
+            #1
+          </div>
+          <div>
+            <div class="flex items-center gap-2.5">
+              <h2 id="modalName" class="text-2xl font-black text-slate-100 font-display">Lionel Messi</h2>
+              <span id="modalPosBadge" class="px-2.5 py-0.5 rounded text-[10px] font-bold font-mono bg-cyan-950 text-cyan-300 border border-cyan-800">Forward</span>
+            </div>
+            <p id="modalEra" class="text-xs text-slate-300 font-semibold mt-0.5 font-mono">Modern Era • Argentina & Barcelona/PSG/Inter Miami</p>
+          </div>
+        </div>
+
+        <!-- Modal Grid Body -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <!-- Radar Chart Canvas Box -->
+          <div class="tactical-card p-3 rounded-2xl border border-white/10 flex flex-col items-center justify-center h-64">
+            <canvas id="modalRadarCanvas" class="max-h-full"></canvas>
+          </div>
+
+          <!-- Real World Factual Details -->
+          <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-3 font-mono">
+              <div class="tactical-card p-3 rounded-2xl space-y-0.5 border border-white/10">
+                <span class="text-[10px] text-slate-400 font-sans uppercase font-bold">GOAT Score</span>
+                <div id="modalScore" class="text-2xl font-black text-cyan-300">4.88</div>
+              </div>
+              <div class="tactical-card-gold p-3 rounded-2xl border border-amber-500/40 space-y-0.5">
+                <span class="text-[10px] text-amber-400 font-sans uppercase font-bold">Perfection Dist D</span>
+                <div id="modalDist" class="text-2xl font-black text-amber-400">D = 1.70</div>
+              </div>
+            </div>
+
+            <!-- Single Best Zenith Season Callout -->
+            <div class="p-3 bg-gradient-to-r from-amber-950/50 to-slate-900 border border-amber-500/40 rounded-2xl space-y-1 font-mono">
+              <div class="text-[10px] text-amber-400 font-extrabold uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-bolt text-amber-400"></i> Best Zenith Season
+              </div>
+              <div id="modalBestSeasonTitle" class="text-xs font-black text-slate-100 font-sans">2011–12 (73 Goals, 29 Assists)</div>
+              <div id="modalBestSeasonMetrics" class="text-[11px] text-slate-200 font-bold">
+                Peak Score: 4.91 | Coords: (99.8, 99.2) | Peak Dist: D = 0.82
+              </div>
+            </div>
+
+            <!-- Summary Text -->
+            <div class="text-xs text-slate-200 leading-relaxed tactical-card p-3.5 rounded-2xl border border-white/10 space-y-1">
+              <span class="font-extrabold text-amber-400 font-mono uppercase text-[10px] block">Real-World Factual Legacy:</span>
+              <p id="modalDescription">
+                Evaluated as the closest player to mathematical perfection in football history. Combines all-time elite dribbling volume with playmaking expected threat and unmatched open-play goal conversion.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="mt-auto border-t border-white/10 bg-[#080a10] py-5 px-6 lg:px-12 text-center text-xs text-slate-400">
+    <div class="max-w-[1440px] mx-auto flex flex-col md:flex-row items-center justify-between gap-2">
+      <div>
+        <span class="text-slate-200 font-extrabold font-mono">THE GOAT MATRIX</span> &copy; 2026 • Quantitative Football Analytics
+      </div>
+      <div class="flex items-center gap-3 text-xs font-mono text-slate-300 font-bold">
+        <span>Perfection Anchor: <strong class="text-amber-400">(100.0, 100.0)</strong></span>
+        <span>•</span>
+        <span>Equal Symmetrical Crosshairs: <strong class="text-cyan-400">X-X' (92.5)</strong> & <strong class="text-emerald-400">Y-Y' (90.0)</strong></span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- DATA ENGINE & APPLICATION SCRIPT -->
+  <script>
+    // Master 50 Football Legends Dataset
+    const playersData = [
+      {
+        rank: 1, name: "Lionel Messi", country: "Argentina", pos: "ATT", posFull: "False 9 / Playmaker", era: "Modern",
+        scores: { output: 4.95, creation: 4.98, technical: 5.00, biggame: 4.90, athletic: 4.40 },
+        careerScore: 4.88, careerX: 99.2, careerY: 98.5, careerD: 1.70,
+        peakSeason: "2011–12 (73 Goals, 29 Assists)", peakScore: 4.91, peakX: 99.8, peakY: 99.2, peakD: 0.82,
+        desc: "Strictly #1 in both career volume and single peak season. Record-holder for calendar year goals (91 in 2012), 8 Ballon d'Ors, World Cup Golden Ball, and highest combined xG+xA per 90 in recorded history."
+      },
+      {
+        rank: 2, name: "Pelé", country: "Brazil", pos: "ATT", posFull: "Inside Forward / Striker", era: "Classic",
+        scores: { output: 4.98, creation: 4.70, technical: 4.85, biggame: 4.95, athletic: 4.80 },
+        careerScore: 4.85, careerX: 98.5, careerY: 97.0, careerD: 3.35,
+        peakSeason: "1962 (Santos Treble & World Cup)", peakScore: 4.82, peakX: 98.0, peakY: 98.0, peakD: 2.83,
+        desc: "3-time FIFA World Cup Winner (1958, 1962, 1970). Over 1,000 career goals, complete technical and explosive athletic package across two decades."
+      },
+      {
+        rank: 3, name: "Cristiano Ronaldo", country: "Portugal", pos: "ATT", posFull: "Inside Forward / Striker", era: "Modern",
+        scores: { output: 4.98, creation: 4.25, technical: 4.55, biggame: 4.95, athletic: 4.95 },
+        careerScore: 4.71, careerX: 97.8, careerY: 99.1, careerD: 2.38,
+        peakSeason: "2013–14 (17 Champions League Goals)", peakScore: 4.69, peakX: 99.0, peakY: 98.0, peakD: 2.24,
+        desc: "All-time official international and Champions League top goalscorer. 5 Ballon d'Ors, 5 UCL titles, unmatched athletic durability and big-game goal volume."
+      },
+      {
+        rank: 4, name: "Diego Maradona", country: "Argentina", pos: "MID", posFull: "Attacking Midfielder", era: "Retro",
+        scores: { output: 4.60, creation: 4.90, technical: 4.95, biggame: 4.75, athletic: 4.30 },
+        careerScore: 4.68, careerX: 98.8, careerY: 88.0, careerD: 12.06,
+        peakSeason: "1985–86 (World Cup Super-Carry)", peakScore: 4.81, peakX: 98.5, peakY: 98.8, peakD: 1.92,
+        desc: "The single greatest international tournament carry in football history at the 1986 World Cup. Unrivalled dribbling balance and creative genius under tight marking."
+      },
+      {
+        rank: 5, name: "Johan Cruyff", country: "Netherlands", pos: "ATT", posFull: "Total Footballer / Forward", era: "Classic",
+        scores: { output: 4.45, creation: 4.95, technical: 4.70, biggame: 4.65, athletic: 4.45 },
+        careerScore: 4.61, careerX: 95.5, careerY: 92.0, careerD: 9.18,
+        peakSeason: "1971–72 (Ajax Treble & Ballon d'Or)", peakScore: 4.71, peakX: 96.0, peakY: 97.0, peakD: 5.00,
+        desc: "Architect of Modern Total Football. 3-time Ballon d'Or winner, led Ajax to 3 consecutive European Cups with unprecedented spatial intelligence."
+      },
+      {
+        rank: 6, name: "Franz Beckenbauer", country: "Germany", pos: "DEF", posFull: "Libero / Sweeper", era: "Classic",
+        scores: { output: 3.85, creation: 4.80, technical: 4.50, biggame: 4.85, athletic: 4.60 },
+        careerScore: 4.50, careerX: 94.0, careerY: 95.5, careerD: 7.50,
+        peakSeason: "1973–74 (World Cup & Euro Cup Double)", peakScore: 4.51, peakX: 92.0, peakY: 98.0, peakD: 8.25,
+        desc: "The ultimate defender-playmaker. Redefined the Libero role, captained Germany to World Cup glory, won 3 European Cups and 2 Ballon d'Ors."
+      },
+      {
+        rank: 7, name: "Alfredo Di Stéfano", country: "Argentina/Spain", pos: "ATT", posFull: "Complete Forward", era: "Classic",
+        scores: { output: 4.70, creation: 4.65, technical: 4.40, biggame: 4.70, athletic: 4.50 },
+        careerScore: 4.60, careerX: 94.8, careerY: 93.5, careerD: 8.32,
+        peakSeason: "1956–57 (Real Madrid Treble)", peakScore: 4.62, peakX: 95.0, peakY: 96.0, peakD: 6.40,
+        desc: "Engine of Real Madrid's 5 consecutive European Cup victories (scored in all 5 finals). Complete box-to-box forward dominance."
+      },
+      {
+        rank: 8, name: "Ronaldo Nazário", country: "Brazil", pos: "ATT", posFull: "Striker / Center-Forward", era: "Retro",
+        scores: { output: 4.85, creation: 4.30, technical: 4.90, biggame: 4.50, athletic: 4.70 },
+        careerScore: 4.62, careerX: 98.0, careerY: 81.5, careerD: 18.61,
+        peakSeason: "1996–97 (Barcelona - 47 Goals in 49 Games)", peakScore: 4.74, peakX: 98.5, peakY: 94.0, peakD: 6.18,
+        desc: "'El Fenómeno'. Peak power, pace, and stepover dribbling conversion. 2-time Ballon d'Or, 2-time World Cup winner (2002 Golden Boot)."
+      },
+      {
+        rank: 9, name: "Zinedine Zidane", country: "France", pos: "MID", posFull: "Attacking Midfielder", era: "Modern",
+        scores: { output: 4.10, creation: 4.85, technical: 4.80, biggame: 4.80, athletic: 4.30 },
+        careerScore: 4.53, careerX: 94.2, careerY: 91.0, careerD: 10.70,
+        peakSeason: "1997–98 (World Cup Winner & Ballon d'Or)", peakScore: 4.57, peakX: 92.5, peakY: 99.0, peakD: 7.57,
+        desc: "Master of big-game leverage. Scored twice in 1998 World Cup Final, iconic volley in 2002 UCL Final, lead France to Euro 2000 title."
+      },
+      {
+        rank: 10, name: "Michel Platini", country: "France", pos: "MID", posFull: "Advanced Playmaker", era: "Retro",
+        scores: { output: 4.65, creation: 4.75, technical: 4.50, biggame: 4.45, athletic: 4.10 },
+        careerScore: 4.53, careerX: 95.0, careerY: 88.5, careerD: 12.54,
+        peakSeason: "1983–84 (Euro 84 - 9 Goals in 5 Matches)", peakScore: 4.69, peakX: 96.5, peakY: 97.5, peakD: 4.30,
+        desc: "3 consecutive Ballon d'Ors (1983, 1984, 1985). Unmatched mid-range goalscoring density and passing mastery for Juventus and France."
+      },
+      {
+        rank: 11, name: "Ferenc Puskás", country: "Hungary/Spain", pos: "ATT", posFull: "Striker", era: "Classic",
+        scores: { output: 4.90, creation: 4.40, technical: 4.35, biggame: 4.60, athletic: 4.20 },
+        careerScore: 4.53, careerX: 94.5, careerY: 92.0, careerD: 9.71,
+        peakSeason: "1959–60 (4 Goals in UCL Final)", peakScore: 4.58, peakX: 96.0, peakY: 94.5, peakD: 6.80,
+        desc: "'The Galloping Major'. Over 700 career goals, legendary left foot, key icon of Mighty Magyars and Real Madrid."
+      },
+      {
+        rank: 12, name: "Paolo Maldini", country: "Italy", pos: "DEF", posFull: "Left-Back / Center-Back", era: "Modern",
+        scores: { output: 3.10, creation: 4.35, technical: 4.10, biggame: 4.95, athletic: 4.70 },
+        careerScore: 4.20, careerX: 90.5, careerY: 99.5, careerD: 9.51,
+        peakSeason: "1993–94 (AC Milan UCL & Serie A Double)", peakScore: 4.13, peakX: 89.0, peakY: 98.5, peakD: 11.10,
+        desc: "The gold standard of defensive longevity. 5 Champions League titles, 25 seasons at AC Milan, world-class across 3 decades."
+      },
+      {
+        rank: 13, name: "Garrincha", country: "Brazil", pos: "ATT", posFull: "Right Winger", era: "Classic",
+        scores: { output: 4.35, creation: 4.45, technical: 4.95, biggame: 4.55, athletic: 4.25 },
+        careerScore: 4.50, careerX: 96.0, careerY: 84.0, careerD: 16.49,
+        peakSeason: "1962 (World Cup Golden Boot & Ball)", peakScore: 4.62, peakX: 96.5, peakY: 98.5, peakD: 3.81,
+        desc: "Unstoppable 1v1 dribbler. Carried Brazil to the 1962 World Cup title in Pelé's injury absence."
+      },
+      {
+        rank: 14, name: "Andrés Iniesta", country: "Spain", pos: "MID", posFull: "Central / Attacking Midfielder", era: "Modern",
+        scores: { output: 3.80, creation: 4.90, technical: 4.85, biggame: 4.80, athletic: 4.10 },
+        careerScore: 4.48, careerX: 93.8, careerY: 93.0, careerD: 9.35,
+        peakSeason: "2011–12 (Euro 2012 Player of Tournament)", peakScore: 4.54, peakX: 92.0, peakY: 97.5, peakD: 8.38,
+        desc: "Scored 2010 World Cup Final winning goal. Master of press resistance and micro-space congestion play for Barcelona and Spain."
+      },
+      {
+        rank: 15, name: "Gerd Müller", country: "Germany", pos: "ATT", posFull: "Penalty Box Striker", era: "Retro",
+        scores: { output: 4.95, creation: 3.70, technical: 3.90, biggame: 4.70, athletic: 4.40 },
+        careerScore: 4.40, careerX: 94.0, careerY: 91.5, careerD: 10.40,
+        peakSeason: "1971–72 (85 Goals in Calendar Year)", peakScore: 4.47, peakX: 98.5, peakY: 92.0, peakD: 8.14,
+        desc: "'Der Bomber'. Ultimate goal conversion efficiency in the 18-yard box. Scored winning goal in 1974 World Cup Final."
+      },
+      {
+        rank: 16, name: "Xavi Hernández", country: "Spain", pos: "MID", posFull: "Deep-Lying Playmaker", era: "Modern",
+        scores: { output: 3.65, creation: 4.95, technical: 4.65, biggame: 4.75, athletic: 4.20 },
+        careerScore: 4.42, careerX: 93.0, careerY: 94.5, careerD: 8.90,
+        peakSeason: "2008–09 (Barça Sextuple & Euro 2008)", peakScore: 4.48, peakX: 91.0, peakY: 96.5, peakD: 9.66,
+        desc: "Metronome of Tiki-Taka. Highest pass completion and progressive line-breaking volume in modern European football."
+      },
+      {
+        rank: 17, name: "Ronaldinho", country: "Brazil", pos: "ATT", posFull: "Attacking Winger / Playmaker", era: "Modern",
+        scores: { output: 4.35, creation: 4.70, technical: 4.98, biggame: 4.30, athletic: 4.30 },
+        careerScore: 4.51, careerX: 97.2, careerY: 80.5, careerD: 19.70,
+        peakSeason: "2005–06 (UCL & Ballon d'Or)", peakScore: 4.69, peakX: 97.5, peakY: 95.0, peakD: 5.59,
+        desc: "Pure aesthetic perfection and joy. 2005 Ballon d'Or, 2002 World Cup winner, standing ovation at Santiago Bernabéu."
+      },
+      {
+        rank: 18, name: "Marco van Basten", country: "Netherlands", pos: "ATT", posFull: "Complete Striker", era: "Retro",
+        scores: { output: 4.75, creation: 4.20, technical: 4.40, biggame: 4.45, athletic: 4.30 },
+        careerScore: 4.45, careerX: 95.8, careerY: 81.0, careerD: 19.46,
+        peakSeason: "1988–89 (Euro 88 Volley & AC Milan UCL)", peakScore: 4.59, peakX: 96.0, peakY: 95.5, peakD: 6.02,
+        desc: "3-time Ballon d'Or winner. Iconic volley in Euro 1988 final, flawless finishing mechanics before ankle injury cut career short."
+      },
+      {
+        rank: 19, name: "Eusébio", country: "Portugal", pos: "ATT", posFull: "Power Forward", era: "Classic",
+        scores: { output: 4.85, creation: 4.15, technical: 4.40, biggame: 4.50, athletic: 4.65 },
+        careerScore: 4.50, careerX: 94.5, careerY: 91.0, careerD: 10.55,
+        peakSeason: "1965–66 (World Cup Golden Boot - 9 Goals)", peakScore: 4.56, peakX: 96.0, peakY: 94.0, peakD: 7.21,
+        desc: "'The Black Panther'. 1965 Ballon d'Or winner, legendary power shot and acceleration for Benfica and Portugal."
+      },
+      {
+        rank: 20, name: "Zico", country: "Brazil", pos: "MID", posFull: "Attacking Midfielder", era: "Retro",
+        scores: { output: 4.60, creation: 4.70, technical: 4.65, biggame: 4.15, athletic: 4.20 },
+        careerScore: 4.47, careerX: 94.0, careerY: 87.5, careerD: 13.87,
+        peakSeason: "1981 (Flamengo World Club Treble)", peakScore: 4.63, peakX: 95.5, peakY: 94.0, peakD: 7.43,
+        desc: "'White Pelé'. Extraordinary free-kick conversion rate, legendary playmaking precision for Flamengo and Brazil."
+      },
+      {
+        rank: 21, name: "Thierry Henry", country: "France", pos: "ATT", posFull: "Left-Forward / Striker", era: "Modern",
+        scores: { output: 4.65, creation: 4.50, technical: 4.60, biggame: 4.35, athletic: 4.65 },
+        careerScore: 4.53, careerX: 94.5, careerY: 91.0, careerD: 10.55,
+        peakSeason: "2002–03 (24 Premier League Goals, 20 Assists)", peakScore: 4.68, peakX: 97.0, peakY: 91.0, peakD: 9.49,
+        desc: "Only player in Premier League history with a 20G/20A season. Icon of Arsenal's Invincibles, 1998 World Cup & Euro 2000 winner."
+      },
+      {
+        rank: 22, name: "Lothar Matthäus", country: "Germany", pos: "MID", posFull: "Box-to-Box Midfielder", era: "Retro",
+        scores: { output: 4.15, creation: 4.40, technical: 4.15, biggame: 4.75, athletic: 4.85 },
+        careerScore: 4.40, careerX: 91.5, careerY: 96.0, careerD: 9.40,
+        peakSeason: "1989–90 (World Cup Captain & Ballon d'Or)", peakScore: 4.45, peakX: 92.0, peakY: 97.0, peakD: 8.54,
+        desc: "1990 Ballon d'Or winner, 5 World Cup tournaments played, ultimate long-range shot and defensive tackle combination."
+      },
+      {
+        rank: 23, name: "Franco Baresi", country: "Italy", pos: "DEF", posFull: "Sweeper / Center-Back", era: "Retro",
+        scores: { output: 3.00, creation: 4.30, technical: 4.00, biggame: 4.80, athletic: 4.50 },
+        careerScore: 4.08, careerX: 90.0, careerY: 95.0, careerD: 11.18,
+        peakSeason: "1988–89 (AC Milan Conceded 14 Goals)", peakScore: 4.06, peakX: 88.0, peakY: 96.0, peakD: 12.65,
+        desc: "Heart of AC Milan's legendary defense. 3 Champions League titles, 1982 World Cup winner, tactical scanning genius."
+      },
+      {
+        rank: 24, name: "Romário", country: "Brazil", pos: "ATT", posFull: "Penalty Box Striker", era: "Modern",
+        scores: { output: 4.80, creation: 3.90, technical: 4.60, biggame: 4.40, athletic: 4.20 },
+        careerScore: 4.40, careerX: 94.0, careerY: 87.0, careerD: 14.32,
+        peakSeason: "1993–94 (World Cup Golden Ball)", peakScore: 4.53, peakX: 95.5, peakY: 96.0, peakD: 6.02,
+        desc: "1994 FIFA World Player of the Year. Over 750 official goals, cold toe-poke finishing and rapid box turn speed."
+      },
+      {
+        rank: 25, name: "George Best", country: "N. Ireland", pos: "ATT", posFull: "Winger", era: "Retro",
+        scores: { output: 4.45, creation: 4.25, technical: 4.85, biggame: 4.10, athletic: 4.25 },
+        careerScore: 4.38, careerX: 94.5, careerY: 81.0, careerD: 19.78,
+        peakSeason: "1967–68 (European Cup & Ballon d'Or)", peakScore: 4.53, peakX: 95.0, peakY: 93.0, peakD: 8.60,
+        desc: "1968 Ballon d'Or winner. Unbelievable close-control dribbling balance on heavy pitches for Manchester United."
+      },
+      {
+        rank: 26, name: "Ruud Gullit", country: "Netherlands", pos: "MID", posFull: "Utility Midfielder / Forward", era: "Retro",
+        scores: { output: 4.20, creation: 4.50, technical: 4.35, biggame: 4.40, athletic: 4.80 },
+        careerScore: 4.41, careerX: 92.5, careerY: 87.5, careerD: 14.57,
+        peakSeason: "1987–88 (Ballon d'Or & Euro 88 Winner)", peakScore: 4.53, peakX: 93.0, peakY: 95.0, peakD: 8.60,
+        desc: "1987 Ballon d'Or winner. The most physically complete utility footballer, capable of elite output at CB, CM, and ST."
+      },
+      {
+        rank: 27, name: "Luka Modrić", country: "Croatia", pos: "MID", posFull: "Central Midfielder", era: "Modern",
+        scores: { output: 3.75, creation: 4.80, technical: 4.55, biggame: 4.80, athletic: 4.45 },
+        careerScore: 4.42, careerX: 92.0, careerY: 96.5, careerD: 8.73,
+        peakSeason: "2017–18 (Ballon d'Or & WC Finalist)", peakScore: 4.48, peakX: 91.5, peakY: 97.5, peakD: 8.86,
+        desc: "2018 Ballon d'Or winner, 6 Champions League titles with Real Madrid, led Croatia to 2018 WC Final and 2022 WC Bronze."
+      },
+      {
+        rank: 28, name: "Bobby Charlton", country: "England", pos: "MID", posFull: "Attacking Midfielder", era: "Classic",
+        scores: { output: 4.30, creation: 4.40, technical: 4.20, biggame: 4.60, athletic: 4.40 },
+        careerScore: 4.36, careerX: 91.0, careerY: 92.5, careerD: 11.72,
+        peakSeason: "1965–66 (World Cup Winner & Ballon d'Or)", peakScore: 4.43, peakX: 92.0, peakY: 96.5, peakD: 8.73,
+        desc: "1966 World Cup and Ballon d'Or winner, icon of Manchester United's 1968 European Cup victory, famous thunderous long shots."
+      },
+      {
+        rank: 29, name: "Neymar Jr.", country: "Brazil", pos: "ATT", posFull: "Inverted Winger / Playmaker", era: "Modern",
+        scores: { output: 4.55, creation: 4.70, technical: 4.90, biggame: 4.10, athletic: 4.20 },
+        careerScore: 4.51, careerX: 96.0, careerY: 83.5, careerD: 16.98,
+        peakSeason: "2014–15 (Barcelona Treble - 39 Goals)", peakScore: 4.71, peakX: 97.0, peakY: 96.0, peakD: 5.00,
+        desc: "Highest successful dribble and expected threat (xT) generation per 90 of his generation alongside Messi. 79 Brazil goals."
+      },
+      {
+        rank: 30, name: "Roberto Baggio", country: "Italy", pos: "ATT", posFull: "Second Striker / Playmaker", era: "Modern",
+        scores: { output: 4.40, creation: 4.55, technical: 4.70, biggame: 4.25, athletic: 4.10 },
+        careerScore: 4.41, careerX: 93.5, careerY: 86.0, careerD: 15.44,
+        peakSeason: "1993–94 (Ballon d'Or & WC Silver Ball)", peakScore: 4.57, peakX: 94.5, peakY: 96.0, peakD: 6.80,
+        desc: "'Il Divin Codino'. 1993 Ballon d'Or winner, single-handedly carried Italy to the 1994 World Cup Final."
+      },
+      {
+        rank: 31, name: "Kylian Mbappé", country: "France", pos: "ATT", posFull: "Forward / Winger", era: "Modern",
+        scores: { output: 4.75, creation: 4.20, technical: 4.50, biggame: 4.45, athletic: 4.85 },
+        careerScore: 4.51, careerX: 95.0, careerY: 84.0, careerD: 16.76,
+        peakSeason: "2021–22 (39 Goals, 26 Assists)", peakScore: 4.66, peakX: 97.0, peakY: 93.0, peakD: 7.62,
+        desc: "World Cup Final hat-trick (2022) & 2018 World Cup winner. Unmatched burst acceleration and direct channel attack."
+      },
+      {
+        rank: 32, name: "Manuel Neuer", country: "Germany", pos: "GK", posFull: "Sweeper-Keeper", era: "Modern",
+        scores: { output: 3.00, creation: 4.60, technical: 3.90, biggame: 4.80, athletic: 4.70 },
+        careerScore: 4.13, careerX: 91.5, careerY: 94.0, careerD: 10.40,
+        peakSeason: "2013–14 (World Cup & Bayern Treble)", peakScore: 4.17, peakX: 90.0, peakY: 98.0, peakD: 10.20,
+        desc: "Revolutionized goalkeeping with aggressive sweeper-keeper positioning and world-class line-breaking passing distributions."
+      },
+      {
+        rank: 33, name: "Karl-Heinz Rummenigge", country: "Germany", pos: "ATT", posFull: "Forward", era: "Retro",
+        scores: { output: 4.50, creation: 4.20, technical: 4.30, biggame: 4.35, athletic: 4.50 },
+        careerScore: 4.34, careerX: 91.5, careerY: 88.0, careerD: 14.71,
+        peakSeason: "1980–81 (Ballon d'Or & Euro 80 Winner)", peakScore: 4.44, peakX: 93.0, peakY: 91.5, peakD: 11.01,
+        desc: "2-time Ballon d'Or winner (1980, 1981). Explosive direct runner and finishing master for Bayern Munich and Germany."
+      },
+      {
+        rank: 34, name: "Michael Laudrup", country: "Denmark", pos: "MID", posFull: "Attacking Playmaker", era: "Retro",
+        scores: { output: 3.90, creation: 4.90, technical: 4.75, biggame: 4.10, athletic: 4.10 },
+        careerScore: 4.35, careerX: 92.5, careerY: 86.5, careerD: 15.44,
+        peakSeason: "1991–92 (Barça Dream Team La Liga)", peakScore: 4.40, peakX: 93.0, peakY: 89.0, peakD: 13.04,
+        desc: "Architect of Barcelona's Dream Team under Cruyff and Real Madrid's title side. Legendary no-look through passes."
+      },
+      {
+        rank: 35, name: "Kevin De Bruyne", country: "Belgium", pos: "MID", posFull: "Advanced Playmaker", era: "Modern",
+        scores: { output: 4.15, creation: 4.92, technical: 4.30, biggame: 4.35, athletic: 4.35 },
+        careerScore: 4.41, careerX: 93.5, careerY: 89.0, careerD: 12.78,
+        peakSeason: "2022–23 (Manchester City Treble)", peakScore: 4.54, peakX: 94.5, peakY: 95.0, peakD: 7.43,
+        desc: "Highest expected assists (xA) per 90 in modern Premier League history. Key orchestrator of Man City's historic Treble."
+      },
+      {
+        rank: 36, name: "Sergio Ramos", country: "Spain", pos: "DEF", posFull: "Center-Back", era: "Modern",
+        scores: { output: 3.50, creation: 3.90, technical: 3.85, biggame: 4.85, athletic: 4.70 },
+        careerScore: 4.08, careerX: 89.0, careerY: 96.5, careerD: 11.54,
+        peakSeason: "2013–14 (93rd Min UCL Final Goal)", peakScore: 4.08, peakX: 88.0, peakY: 97.5, peakD: 12.26,
+        desc: "4-time Champions League winner, World Cup & 2x Euro winner. Scored legendary 93rd-minute equalizer in 2014 UCL Final."
+      },
+      {
+        rank: 37, name: "Didi", country: "Brazil", pos: "MID", posFull: "Central Midfielder", era: "Classic",
+        scores: { output: 3.85, creation: 4.70, technical: 4.40, biggame: 4.55, athletic: 4.10 },
+        careerScore: 4.30, careerX: 90.5, careerY: 89.5, careerD: 14.16,
+        peakSeason: "1958 (World Cup Golden Ball)", peakScore: 4.36, peakX: 91.0, peakY: 95.5, peakD: 10.06,
+        desc: "Inventor of the 'Folha Seca' (dead-leaf) free kick. Brains behind Brazil's 1958 and 1962 World Cup triumphs."
+      },
+      {
+        rank: 38, name: "Gianni Rivera", country: "Italy", pos: "MID", posFull: "Playmaker", era: "Classic",
+        scores: { output: 4.10, creation: 4.70, technical: 4.45, biggame: 4.15, athletic: 3.90 },
+        careerScore: 4.28, careerX: 90.0, careerY: 88.0, careerD: 15.62,
+        peakSeason: "1968–69 (European Cup & Ballon d'Or)", peakScore: 4.34, peakX: 91.0, peakY: 90.0, peakD: 13.45,
+        desc: "1969 Ballon d'Or winner. 'Golden Boy' of AC Milan, sublime vision and creative finesse over 19 seasons."
+      },
+      {
+        rank: 39, name: "Kaká", country: "Brazil", pos: "MID", posFull: "Attacking Midfielder", era: "Modern",
+        scores: { output: 4.30, creation: 4.45, technical: 4.55, biggame: 4.25, athletic: 4.60 },
+        careerScore: 4.38, careerX: 94.0, careerY: 82.0, careerD: 18.97,
+        peakSeason: "2006–07 (AC Milan UCL Solo Carry)", peakScore: 4.67, peakX: 95.5, peakY: 97.5, peakD: 5.15,
+        desc: "2007 Ballon d'Or winner. Devastating half-space acceleration and long-stride solo drives leading AC Milan to UCL glory."
+      },
+      {
+        rank: 40, name: "Bobby Moore", country: "England", pos: "DEF", posFull: "Center-Back", era: "Classic",
+        scores: { output: 2.80, creation: 4.50, technical: 4.00, biggame: 4.70, athletic: 4.20 },
+        careerScore: 4.00, careerX: 88.5, careerY: 91.5, careerD: 14.30,
+        peakSeason: "1965–66 (World Cup Winning Captain)", peakScore: 4.03, peakX: 87.5, peakY: 96.5, peakD: 12.98,
+        desc: "Captained England to 1966 World Cup. Pelé described him as the cleanest, smartest defender he ever played against."
+      },
+      {
+        rank: 41, name: "Roberto Carlos", country: "Brazil", pos: "DEF", posFull: "Left-Back", era: "Modern",
+        scores: { output: 3.70, creation: 4.10, technical: 4.30, biggame: 4.60, athletic: 4.85 },
+        careerScore: 4.23, careerX: 89.5, careerY: 94.0, careerD: 12.10,
+        peakSeason: "2001–02 (Real Madrid UCL & WC 2002)", peakScore: 4.27, peakX: 90.0, peakY: 96.0, peakD: 10.77,
+        desc: "3-time Champions League winner, 2002 World Cup winner. Banana curve free-kick trajectories and unmatched flank stamina."
+      },
+      {
+        rank: 42, name: "Cafu", country: "Brazil", pos: "DEF", posFull: "Right-Back", era: "Modern",
+        scores: { output: 3.20, creation: 4.20, technical: 4.20, biggame: 4.80, athletic: 4.90 },
+        careerScore: 4.13, careerX: 89.0, careerY: 96.0, careerD: 11.70,
+        peakSeason: "2001–02 (World Cup Winning Captain)", peakScore: 4.14, peakX: 88.5, peakY: 96.0, peakD: 12.18,
+        desc: "Only player to play in 3 consecutive World Cup Finals (1994, 1998, 2002). Winning captain in 2002, relentless engine."
+      },
+      {
+        rank: 43, name: "Daniel Passarella", country: "Argentina", pos: "DEF", posFull: "Goalscoring Center-Back", era: "Retro",
+        scores: { output: 3.75, creation: 3.95, technical: 3.80, biggame: 4.55, athletic: 4.40 },
+        careerScore: 4.04, careerX: 88.0, careerY: 91.0, careerD: 15.00,
+        peakSeason: "1977–78 (World Cup Winning Captain)", peakScore: 4.06, peakX: 88.5, peakY: 93.0, peakD: 13.43,
+        desc: "134 official career goals as a center-back. Captained Argentina to their first World Cup in 1978 with fierce leadership."
+      },
+      {
+        rank: 44, name: "Marcel Desailly", country: "France", pos: "DEF", posFull: "Center-Back / Defensive Mid", era: "Modern",
+        scores: { output: 2.90, creation: 3.90, technical: 3.70, biggame: 4.70, athletic: 4.80 },
+        careerScore: 3.93, careerX: 87.5, careerY: 93.5, careerD: 14.10,
+        peakSeason: "1993–94 (Back-to-Back UCL with Milan)", peakScore: 3.97, peakX: 87.0, peakY: 95.5, peakD: 13.76,
+        desc: "'The Rock'. Back-to-back Champions League winner with Marseille (1993) and Milan (1994), 1998 World Cup & Euro 2000 winner."
+      },
+      {
+        rank: 45, name: "Lilian Thuram", country: "France", pos: "DEF", posFull: "Right-Back / Center-Back", era: "Modern",
+        scores: { output: 2.70, creation: 3.80, technical: 3.70, biggame: 4.75, athletic: 4.75 },
+        careerScore: 3.88, careerX: 86.5, careerY: 94.0, careerD: 14.77,
+        peakSeason: "1997–98 (World Cup Semi-Final Hero)", peakScore: 3.92, peakX: 86.0, peakY: 96.0, peakD: 14.56,
+        desc: "142 caps for France, scored legendary brace in 1998 World Cup semi-final, tactical lock-down defender for Parma and Juventus."
+      },
+      {
+        rank: 46, name: "Elías Figueroa", country: "Chile", pos: "DEF", posFull: "Center-Back", era: "Retro",
+        scores: { output: 2.90, creation: 4.20, technical: 3.90, biggame: 4.50, athletic: 4.40 },
+        careerScore: 3.93, careerX: 87.0, careerY: 90.5, careerD: 16.10,
+        peakSeason: "1974–75 (3x South American Player of Year)", peakScore: 3.95, peakX: 87.0, peakY: 91.5, peakD: 15.52,
+        desc: "3-time South American Footballer of the Year (1974, 1975, 1976), winning over Pelé and Zico."
+      },
+      {
+        rank: 47, name: "Lev Yashin", country: "Soviet Union", pos: "GK", posFull: "Goalkeeper", era: "Classic",
+        scores: { output: 2.80, creation: 4.10, technical: 3.50, biggame: 4.70, athletic: 4.60 },
+        careerScore: 3.88, careerX: 88.0, careerY: 91.0, careerD: 15.00,
+        peakSeason: "1963 (Only GK Ballon d'Or Winner)", peakScore: 3.89, peakX: 87.5, peakY: 94.0, peakD: 13.87,
+        desc: "'The Black Spider'. The only goalkeeper in football history to win the Ballon d'Or (1963). Saved over 150 career penalties."
+      },
+      {
+        rank: 48, name: "Gianluigi Buffon", country: "Italy", pos: "GK", posFull: "Goalkeeper", era: "Modern",
+        scores: { output: 2.60, creation: 4.00, technical: 3.40, biggame: 4.80, athletic: 4.60 },
+        careerScore: 3.82, careerX: 86.0, careerY: 98.5, careerD: 14.08,
+        peakSeason: "2005–06 (World Cup Winner - 2 Goals Conceded)", peakScore: 3.85, peakX: 86.0, peakY: 97.5, peakD: 14.22,
+        desc: "2006 World Cup winner with only 2 goals conceded in 7 matches. 10 Serie A titles, supreme consistency over 28 professional seasons."
+      },
+      {
+        rank: 49, name: "Gaetano Scirea", country: "Italy", pos: "DEF", posFull: "Libero", era: "Retro",
+        scores: { output: 2.90, creation: 4.30, technical: 3.90, biggame: 4.55, athletic: 4.20 },
+        careerScore: 3.93, careerX: 87.0, careerY: 91.5, careerD: 15.53,
+        peakSeason: "1981–82 (World Cup Winner & UEFA Cup)", peakScore: 3.97, peakX: 87.5, peakY: 93.5, peakD: 14.11,
+        desc: "Gentleman sweeper. Won all UEFA club competitions and the 1982 World Cup. Never received a single red card in his career."
+      },
+      {
+        rank: 50, name: "Iker Casillas", country: "Spain", pos: "GK", posFull: "Goalkeeper", era: "Modern",
+        scores: { output: 2.50, creation: 3.90, technical: 3.40, biggame: 4.75, athletic: 4.65 },
+        careerScore: 3.78, careerX: 86.5, careerY: 94.5, careerD: 14.57,
+        peakSeason: "2009–10 (World Cup Captain & Golden Glove)", peakScore: 3.81, peakX: 86.0, peakY: 96.5, peakD: 14.43,
+        desc: "'San Iker'. Captained Spain to World Cup 2010 and 2 Euro titles. 3 Champions League titles with Real Madrid."
+      }
+    ];
+
+    // State Variables
+    let currentTab = 'career';
+    let currentPosFilter = 'ALL';
+    let currentEraFilter = 'ALL';
+    let selectedPlayerIndex = 0;
+    let compareIndexA = 0;
+    let compareIndexB = 2;
+    let modalRadarChart = null;
+    let compareRadarChart = null;
+    let tableSortCol = 'distance';
+    let tableSortAsc = true;
+
+    // Zoom & Pan
+    let zoomLevel = 1.0;
+    let panOffsetX = 0;
+    let panOffsetY = 0;
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+
+    // Canvas Elements
+    const canvas = document.getElementById('scatterCanvas');
+    const ctx = canvas.getContext('2d');
+    const tooltip = document.getElementById('canvasTooltip');
+
+    window.addEventListener('DOMContentLoaded', () => {
+      resizeCanvas();
+      window.addEventListener('resize', () => { resizeCanvas(); drawCanvas(); });
+
+      canvas.addEventListener('mousedown', handleMouseDown);
+      canvas.addEventListener('mousemove', handleMouseMove);
+      canvas.addEventListener('mouseup', handleMouseUp);
+      canvas.addEventListener('mouseleave', () => { isDragging = false; tooltip.classList.add('hidden'); });
+      canvas.addEventListener('wheel', handleWheel, { passive: false });
+
+      // Close search auto-suggest dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        const searchBox = document.getElementById('searchContainer');
+        if (searchBox && !searchBox.contains(e.target)) {
+          document.getElementById('searchSuggestions').classList.add('hidden');
+        }
+      });
+
+      populateCompareSelectors();
+      updateSelectedPlayerSidebar(0);
+      renderLeaderboardTable();
+
+      drawCanvas();
+    });
+
+    function resizeCanvas() {
+      const parent = canvas.parentElement;
+      const rect = parent.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+    }
+
+    // Google-Style Search Input & Dynamic Dropdown
+    function handleSearchInput(e) {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      const suggestionsBox = document.getElementById('searchSuggestions');
+      const clearBtn = document.getElementById('searchClearBtn');
+
+      if (query.length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+        suggestionsBox.classList.add('hidden');
+        drawCanvas();
+        renderLeaderboardTable();
+        return;
+      }
+
+      // Filter legends against query
+      const matches = playersData.filter(p => 
+        p.name.toLowerCase().includes(query) ||
+        p.country.toLowerCase().includes(query) ||
+        p.posFull.toLowerCase().includes(query) ||
+        p.era.toLowerCase().includes(query) ||
+        p.desc.toLowerCase().includes(query)
+      );
+
+      suggestionsBox.innerHTML = '';
+      suggestionsBox.classList.remove('hidden');
+
+      if (matches.length === 0) {
+        // Fallback item when no player matches query
+        const emptyItem = document.createElement('div');
+        emptyItem.className = "px-4 py-3 text-center text-xs text-amber-400/90 font-mono font-bold bg-amber-500/10 backdrop-blur-md rounded-xl border border-amber-500/30 flex items-center justify-center gap-2 shadow-sm";
+        emptyItem.innerHTML = `<i class="fa-solid fa-circle-exclamation text-amber-400"></i> Player is not in this list.`;
+        suggestionsBox.appendChild(emptyItem);
+      } else {
+        matches.slice(0, 7).forEach(p => {
+          const item = document.createElement('div');
+          item.className = "px-3 py-2 text-xs rounded-xl bg-white/[0.03] hover:bg-gradient-to-r hover:from-cyan-500/25 hover:to-emerald-500/15 backdrop-blur-lg border border-white/10 hover:border-cyan-400/50 cursor-pointer transition-all duration-200 flex items-center justify-between gap-3 font-sans shadow-sm hover:shadow-cyan-500/10";
+          
+          const origIdx = playersData.findIndex(item => item.rank === p.rank);
+          
+          let posBg = 'bg-cyan-950/80 text-cyan-300 border-cyan-800/80';
+          if (p.pos === 'MID') posBg = 'bg-emerald-950/80 text-emerald-300 border-emerald-800/80';
+          else if (p.pos === 'DEF') posBg = 'bg-rose-950/80 text-rose-300 border-rose-800/80';
+          else if (p.pos === 'GK') posBg = 'bg-amber-950/80 text-amber-300 border-amber-800/80';
+
+          item.innerHTML = `
+            <div class="flex items-center gap-2.5 min-w-0">
+              <span class="w-6 h-6 rounded-md bg-slate-900/90 border border-white/20 font-mono font-bold text-[10px] text-amber-400 flex items-center justify-center shrink-0 shadow-inner">#${p.rank}</span>
+              <div class="truncate">
+                <div class="font-bold text-slate-100 truncate">${p.name}</div>
+                <div class="text-[10px] text-slate-400 font-mono truncate">${p.country} • ${p.era}</div>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold border ${posBg} shrink-0">${p.pos}</span>
+          `;
+
+          item.onclick = () => selectSuggestedPlayer(origIdx);
+          suggestionsBox.appendChild(item);
+        });
+      }
+
+      drawCanvas();
+      renderLeaderboardTable();
+    }
+
+    function clearSearch() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('searchClearBtn').classList.add('hidden');
+      document.getElementById('searchSuggestions').classList.add('hidden');
+      drawCanvas();
+      renderLeaderboardTable();
+    }
+
+    function selectSuggestedPlayer(index) {
+      document.getElementById('searchSuggestions').classList.add('hidden');
+      document.getElementById('searchInput').value = playersData[index].name;
+      document.getElementById('searchClearBtn').classList.remove('hidden');
+
+      if (currentTab !== 'career' && currentTab !== 'peak') {
+        switchTab('career');
+      }
+
+      updateSelectedPlayerSidebar(index);
+      focusOnPlayer(index);
+      openPlayerModal(index);
+      drawCanvas();
+    }
+
+    function focusOnPlayer(index) {
+      const p = playersData[index];
+      const pX = currentTab === 'career' ? p.careerX : p.peakX;
+      const pY = currentTab === 'career' ? p.careerY : p.peakY;
+
+      const parent = canvas.parentElement;
+      const width = parent.clientWidth;
+      const height = parent.clientHeight;
+
+      const xMin = 76.0, xMax = 104.0;
+      const yMin = 76.0, yMax = 104.0;
+
+      const paddingLeft = 60, paddingRight = 60;
+      const paddingTop = 60, paddingBottom = 60;
+
+      const plotWidth = width - paddingLeft - paddingRight;
+      const plotHeight = height - paddingTop - paddingBottom;
+
+      const targetBaseX = paddingLeft + ((pX - xMin) / (xMax - xMin)) * plotWidth;
+      const targetBaseY = paddingTop + ((yMax - pY) / (yMax - yMin)) * plotHeight;
+
+      // Auto-center pan offset so player node sits directly in middle of viewport
+      zoomLevel = 1.4;
+      panOffsetX = (width / 2 - targetBaseX) * zoomLevel;
+      panOffsetY = (height / 2 - targetBaseY) * zoomLevel;
+      
+      drawCanvas();
+    }
+
+    function handleWheel(e) {
+      e.preventDefault();
+      const zoomFactor = e.deltaY < 0 ? 1.12 : 0.88;
+      
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      const newZoom = Math.max(0.65, Math.min(zoomLevel * zoomFactor, 4.0));
+      const scale = newZoom / zoomLevel;
+
+      const parent = canvas.parentElement;
+      const centerX = parent.clientWidth / 2;
+      const centerY = parent.clientHeight / 2;
+
+      panOffsetX = (mouseX - centerX) - (mouseX - centerX - panOffsetX) * scale;
+      panOffsetY = (mouseY - centerY) - (mouseY - centerY - panOffsetY) * scale;
+      zoomLevel = newZoom;
+
+      drawCanvas();
+    }
+
+    function zoomCanvas(factor) {
+      zoomLevel *= factor;
+      zoomLevel = Math.max(0.65, Math.min(zoomLevel, 4.0));
+      drawCanvas();
+    }
+
+    function resetCanvasView() {
+      zoomLevel = 1.0;
+      panOffsetX = 0;
+      panOffsetY = 0;
+      drawCanvas();
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      
+      ['career', 'peak', 'compare', 'table'].forEach(t => {
+        const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (t === tab) {
+          btn.className = "tactical-tab tactical-tab-active px-5 py-2.5 rounded-xl text-xs flex items-center gap-2 transition font-mono";
+        } else {
+          btn.className = "tactical-tab text-slate-400 hover:text-white px-5 py-2.5 rounded-xl text-xs font-extrabold flex items-center gap-2 transition font-mono";
+        }
+      });
+
+      const graphContainer = document.getElementById('graphViewContainer');
+      const compareContainer = document.getElementById('compareViewContainer');
+      const tableContainer = document.getElementById('tableViewContainer');
+
+      graphContainer.classList.add('hidden');
+      compareContainer.classList.add('hidden');
+      tableContainer.classList.add('hidden');
+
+      if (tab === 'career' || tab === 'peak') {
+        graphContainer.classList.remove('hidden');
+        
+        if (tab === 'career') {
+          document.getElementById('graphTitle').innerHTML = `<i class="fa-solid fa-chart-line"></i> Overall Career GOAT Model`;
+          document.getElementById('graphSubtitle').innerText = "Symmetrical Central Crosshairs X-X' (92.5) & Y-Y' (90.0) | Equal Length Axis Lines";
+        } else {
+          document.getElementById('graphTitle').innerHTML = `<i class="fa-solid fa-bolt text-amber-400"></i> Single Best Peak Season Model`;
+          document.getElementById('graphSubtitle').innerText = "Symmetrical Central Crosshairs X-X' (92.5) & Y-Y' (90.0) | Single 12-Month Zenith Score";
+        }
+        setTimeout(() => { resizeCanvas(); drawCanvas(); }, 40);
+      } else if (tab === 'compare') {
+        compareContainer.classList.remove('hidden');
+        updateCompareView();
+      } else if (tab === 'table') {
+        tableContainer.classList.remove('hidden');
+        renderLeaderboardTable();
+      }
+    }
+
+    function setPosFilter(pos) {
+      currentPosFilter = pos;
+      document.querySelectorAll('.pos-filter-btn').forEach(btn => {
+        if (btn.id === 'pos-' + pos) {
+          btn.className = "pos-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40";
+        } else {
+          btn.className = "pos-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800 border border-transparent";
+        }
+      });
+      drawCanvas();
+      renderLeaderboardTable();
+    }
+
+    function setEraFilter(era) {
+      currentEraFilter = era;
+      document.querySelectorAll('.era-filter-btn').forEach(btn => {
+        if (btn.id === 'era-' + era) {
+          btn.className = "era-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-white border border-slate-700";
+        } else {
+          btn.className = "era-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800 border border-transparent";
+        }
+      });
+      drawCanvas();
+      renderLeaderboardTable();
+    }
+
+    function getFilteredPlayers() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      return playersData.filter(p => {
+        const matchesPos = currentPosFilter === 'ALL' || p.pos === currentPosFilter;
+        const matchesEra = currentEraFilter === 'ALL' || p.era === currentEraFilter;
+        const matchesSearch = query === '' || 
+          p.name.toLowerCase().includes(query) || 
+          p.country.toLowerCase().includes(query) ||
+          p.posFull.toLowerCase().includes(query);
+        return matchesPos && matchesEra && matchesSearch;
+      });
+    }
+
+    // MAIN HIGH-CONTRAST CANVAS RENDERER (NO BACKGROUND GRID, NO OUTER BASELINES, STRICT EQUAL PIXEL CROSSHAIR LENGTHS)
+    function drawCanvas() {
+      if (currentTab !== 'career' && currentTab !== 'peak') return;
+
+      const parent = canvas.parentElement;
+      const width = parent.clientWidth;
+      const height = parent.clientHeight;
+
+      // 1. Completely Clean 100% Dark Obsidian Backdrop (#080a10)
+      ctx.fillStyle = '#080a10';
+      ctx.fillRect(0, 0, width, height);
+
+      // World Coordinate Mapping Bounds
+      const xMin = 76.0, xMax = 104.0; 
+      const yMin = 76.0, yMax = 104.0; 
+
+      const paddingLeft = 60;
+      const paddingRight = 60;
+      const paddingTop = 60;
+      const paddingBottom = 60;
+
+      const plotWidth = width - paddingLeft - paddingRight;
+      const plotHeight = height - paddingTop - paddingBottom;
+
+      function mapX(valX) {
+        const base = paddingLeft + ((valX - xMin) / (xMax - xMin)) * plotWidth;
+        return (base - width / 2) * zoomLevel + width / 2 + panOffsetX;
+      }
+
+      function mapY(valY) {
+        const base = paddingTop + ((yMax - valY) / (yMax - yMin)) * plotHeight;
+        return (base - height / 2) * zoomLevel + height / 2 + panOffsetY;
+      }
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(0, 0, width, height);
+      ctx.clip();
+
+      // NO GRID LINES DRAWN HERE (Clean Obsidian Surface)
+
+      // 2. Concentric Distance Rings from Theoretical Perfection Anchor (100, 100)
+      const showRings = document.getElementById('toggleDistanceRings').checked;
+      const perfX = mapX(100.0);
+      const perfY = mapY(100.0);
+
+      if (showRings) {
+        [2.0, 5.0, 10.0, 15.0].forEach(d => {
+          const rx = Math.abs(mapX(100.0) - mapX(100.0 - d));
+          const ry = Math.abs(mapY(100.0) - mapY(100.0 - d));
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.ellipse(perfX, perfY, rx, ry, 0, 0, 2 * Math.PI);
+          ctx.strokeStyle = d <= 2.0 ? 'rgba(6, 182, 212, 0.65)' : 'rgba(255, 255, 255, 0.16)';
+          ctx.lineWidth = d <= 2.0 ? 2.0 : 1.2;
+          ctx.setLineDash([4, 4]);
+          ctx.stroke();
+          ctx.restore();
+
+          if (perfX - rx > 20 && perfY < height - 50) {
+            ctx.fillStyle = d <= 2.0 ? '#06b6d4' : '#94a3b8';
+            ctx.font = 'bold 11px "Space Grotesk"';
+            ctx.fillText(`D = ${d.toFixed(1)}`, perfX - rx + 6, perfY + 14);
+          }
+        });
+      }
+
+      // 3. STRICTLY EQUAL-LENGTH CENTRAL QUADRANT CROSSHAIR AXES (Intersecting at X=92.5, Y=90.0)
+      const xCenterVal = 92.5; 
+      const yCenterVal = 90.0; 
+
+      const cx = mapX(xCenterVal);
+      const cy = mapY(yCenterVal);
+
+      // Exact equal pixel length L in screen space for all 4 directions (Up, Down, Left, Right)
+      const equalPixelArmLength = Math.min(plotWidth, plotHeight) * 0.45 * zoomLevel;
+
+      const xRightEnd = cx + equalPixelArmLength;
+      const xLeftEnd  = cx - equalPixelArmLength;
+      const yTopEnd   = cy - equalPixelArmLength;
+      const yBottomEnd= cy + equalPixelArmLength;
+
+      const arrowHeadLen = 12;
+      const arrowHeadWidth = 9;
+
+      // Horizontal Axis X-X' (Cyan #06b6d4)
+      ctx.save();
+      ctx.strokeStyle = '#06b6d4';
+      ctx.lineWidth = 2.4;
+      ctx.setLineDash([6, 4]);
+      ctx.lineCap = 'butt';
+      ctx.beginPath();
+      ctx.moveTo(xLeftEnd + arrowHeadLen, cy);
+      ctx.lineTo(xRightEnd - arrowHeadLen, cy);
+      ctx.stroke();
+      ctx.restore();
+
+      // Vertical Axis Y-Y' (Emerald #10b981)
+      ctx.save();
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 2.4;
+      ctx.setLineDash([6, 4]);
+      ctx.lineCap = 'butt';
+      ctx.beginPath();
+      ctx.moveTo(cx, yBottomEnd - arrowHeadLen);
+      ctx.lineTo(cx, yTopEnd + arrowHeadLen);
+      ctx.stroke();
+      ctx.restore();
+
+      // Arrowheads at Terminals
+      drawScreenArrow(ctx, xRightEnd, cy, 0, arrowHeadLen, arrowHeadWidth, '#06b6d4'); // Right
+      drawScreenArrow(ctx, xLeftEnd, cy, Math.PI, arrowHeadLen, arrowHeadWidth, '#06b6d4'); // Left
+      drawScreenArrow(ctx, cx, yTopEnd, -Math.PI / 2, arrowHeadLen, arrowHeadWidth, '#10b981'); // Top
+      drawScreenArrow(ctx, cx, yBottomEnd, Math.PI / 2, arrowHeadLen, arrowHeadWidth, '#10b981'); // Bottom
+
+      // 4. Directional Terminal Badges (Rendered as Dark Backplate Pills)
+      drawPillBadge(ctx, xLeftEnd - 12, cy, "X': DEFICIT DIRECTION / LOWER OUTPUT", '#06b6d4', '#080a10', 'right');
+      drawPillBadge(ctx, xRightEnd + 12, cy, "X: PEAK OUTPUT / IMPACT", '#06b6d4', '#080a10', 'left');
+      drawPillBadge(ctx, cx, yTopEnd - 18, "Y: LONGEVITY & TITLE LEVERAGE", '#10b981', '#080a10', 'center');
+      drawPillBadge(ctx, cx, yBottomEnd + 20, "Y': LOWER VOLUME / LEVERAGE", '#10b981', '#080a10', 'center');
+
+      // 5. Theoretical Perfection Anchor Star at (100, 100) - NO TEXT BADGE OR OUTER BOX
+      drawStar(ctx, perfX, perfY, 5, 12 * Math.sqrt(zoomLevel), 5 * Math.sqrt(zoomLevel), '#fbbf24');
+
+      // 6. Filtered Player Data Points
+      const filtered = getFilteredPlayers();
+      const showNames = document.getElementById('toggleNames').checked;
+
+      filtered.forEach(player => {
+        const pX = currentTab === 'career' ? player.careerX : player.peakX;
+        const pY = currentTab === 'career' ? player.careerY : player.peakY;
+        const ptX = mapX(pX);
+        const ptY = mapY(pY);
+
+        if (ptX < -20 || ptX > width + 20 || ptY < -20 || ptY > height + 20) return;
+
+        const isSelected = (player.rank - 1) === selectedPlayerIndex;
+
+        let color = '#06b6d4'; // ATT: Cyan
+        if (player.pos === 'MID') color = '#10b981'; // MID: Emerald
+        else if (player.pos === 'DEF') color = '#f43f5e'; // DEF: Crimson
+        else if (player.pos === 'GK') color = '#fbbf24'; // GK: Gold
+
+        if (isSelected) {
+          ctx.beginPath();
+          ctx.arc(ptX, ptY, 14 * Math.sqrt(zoomLevel), 0, 2 * Math.PI);
+          ctx.strokeStyle = '#fbbf24';
+          ctx.lineWidth = 3.0;
+          ctx.stroke();
+        }
+
+        ctx.beginPath();
+        ctx.arc(ptX, ptY, (isSelected ? 8.5 : 6.0) * Math.sqrt(zoomLevel), 0, 2 * Math.PI);
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        if (showNames && (isSelected || player.rank <= 6 || zoomLevel > 1.35)) {
+          ctx.font = isSelected ? 'extrabold 11px "Inter"' : 'bold 10px "Inter"';
+          
+          ctx.strokeStyle = '#080a10';
+          ctx.lineWidth = 3.5;
+          ctx.strokeText(player.name, ptX + 10 * Math.sqrt(zoomLevel), ptY + 4);
+
+          ctx.fillStyle = isSelected ? '#ffffff' : (player.rank <= 3 ? '#fbbf24' : '#e2e8f0');
+          ctx.textAlign = 'left';
+          ctx.fillText(player.name, ptX + 10 * Math.sqrt(zoomLevel), ptY + 4);
+        }
+      });
+
+      ctx.restore();
+    }
+
+    // Exact Screen Vector Arrowhead Geometry
+    function drawScreenArrow(ctx, tipX, tipY, angle, length, width, color) {
+      ctx.save();
+      ctx.translate(tipX, tipY);
+      ctx.rotate(angle);
+      
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(-length, -width / 2);
+      ctx.lineTo(-length, width / 2);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.0;
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    // High-Visibility Dark Backplate Pill Badge Component
+    function drawPillBadge(ctx, x, y, text, borderCol, bgCol, align = 'left') {
+      ctx.save();
+      ctx.font = 'bold 11px "Space Grotesk"';
+      const textWidth = ctx.measureText(text).width;
+      const pillPadX = 8;
+      const pillHeight = 20;
+
+      let pillX = x;
+      if (align === 'center') pillX = x - (textWidth + pillPadX * 2) / 2;
+      else if (align === 'right') pillX = x - (textWidth + pillPadX * 2);
+
+      const pillY = y - pillHeight / 2;
+
+      ctx.fillStyle = bgCol;
+      ctx.beginPath();
+      ctx.roundRect(pillX, pillY, textWidth + pillPadX * 2, pillHeight, 6);
+      ctx.fill();
+
+      ctx.strokeStyle = borderCol;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'left';
+      ctx.fillText(text, pillX + pillPadX, y + 4);
+
+      ctx.restore();
+    }
+
+    function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius, color) {
+      let rot = Math.PI / 2 * 3;
+      let x = cx;
+      let y = cy;
+      let step = Math.PI / spikes;
+
+      ctx.beginPath();
+      ctx.moveTo(cx, cy - outerRadius);
+      for (let i = 0; i < spikes; i++) {
+        x = cx + Math.cos(rot) * outerRadius;
+        y = cy + Math.sin(rot) * outerRadius;
+        ctx.lineTo(x, y);
+        rot += step;
+
+        x = cx + Math.cos(rot) * innerRadius;
+        y = cy + Math.sin(rot) * innerRadius;
+        ctx.lineTo(x, y);
+        rot += step;
+      }
+      ctx.lineTo(cx, cy - outerRadius);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+    }
+
+    // Canvas Interactions
+    function handleMouseDown(e) {
+      isDragging = true;
+      dragStartX = e.clientX - panOffsetX;
+      dragStartY = e.clientY - panOffsetY;
+    }
+
+    function handleMouseMove(e) {
+      if (isDragging) {
+        panOffsetX = e.clientX - dragStartX;
+        panOffsetY = e.clientY - dragStartY;
+        drawCanvas();
+        return;
+      }
+
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      const parent = canvas.parentElement;
+      const width = parent.clientWidth;
+      const height = parent.clientHeight;
+
+      const xMin = 76.0, xMax = 104.0; 
+      const yMin = 76.0, yMax = 104.0; 
+
+      const paddingLeft = 60;
+      const paddingRight = 60;
+      const paddingTop = 60;
+      const paddingBottom = 60;
+
+      const plotWidth = width - paddingLeft - paddingRight;
+      const plotHeight = height - paddingTop - paddingBottom;
+
+      function mapX(valX) {
+        const base = paddingLeft + ((valX - xMin) / (xMax - xMin)) * plotWidth;
+        return (base - width / 2) * zoomLevel + width / 2 + panOffsetX;
+      }
+
+      function mapY(valY) {
+        const base = paddingTop + ((yMax - valY) / (yMax - yMin)) * plotHeight;
+        return (base - height / 2) * zoomLevel + height / 2 + panOffsetY;
+      }
+
+      const filtered = getFilteredPlayers();
+      let hoveredPlayer = null;
+
+      for (let player of filtered) {
+        const pX = currentTab === 'career' ? player.careerX : player.peakX;
+        const pY = currentTab === 'career' ? player.careerY : player.peakY;
+        const cx = mapX(pX);
+        const cy = mapY(pY);
+
+        const dist = Math.hypot(mouseX - cx, mouseY - cy);
+        if (dist <= 12) {
+          hoveredPlayer = player;
+          break;
+        }
+      }
+
+      if (hoveredPlayer) {
+        tooltip.classList.remove('hidden');
+        tooltip.style.left = `${Math.min(mouseX + 16, width - 270)}px`;
+        tooltip.style.top = `${Math.min(mouseY + 16, height - 170)}px`;
+
+        document.getElementById('tooltipName').innerText = hoveredPlayer.name;
+        document.getElementById('tooltipRank').innerText = `#${hoveredPlayer.rank}`;
+        document.getElementById('tooltipPos').innerText = `${hoveredPlayer.posFull} / ${hoveredPlayer.era}`;
+        
+        const scoreVal = currentTab === 'career' ? hoveredPlayer.careerScore : hoveredPlayer.peakScore;
+        const pX = currentTab === 'career' ? hoveredPlayer.careerX : hoveredPlayer.peakX;
+        const pY = currentTab === 'career' ? hoveredPlayer.careerY : hoveredPlayer.peakY;
+        const pD = currentTab === 'career' ? hoveredPlayer.careerD : hoveredPlayer.peakD;
+
+        document.getElementById('tooltipScore').innerText = scoreVal.toFixed(2);
+        document.getElementById('tooltipCoords').innerText = `(${pX.toFixed(1)}, ${pY.toFixed(1)})`;
+        document.getElementById('tooltipDist').innerText = `D = ${pD.toFixed(2)}`;
+      } else {
+        tooltip.classList.add('hidden');
+      }
+    }
+
+    function handleMouseUp(e) {
+      if (isDragging) {
+        isDragging = false;
+        
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        const parent = canvas.parentElement;
+        const width = parent.clientWidth;
+        const height = parent.clientHeight;
+
+        const xMin = 76.0, xMax = 104.0; 
+        const yMin = 76.0, yMax = 104.0; 
+
+        const paddingLeft = 60;
+        const paddingRight = 60;
+        const paddingTop = 60;
+        const paddingBottom = 60;
+
+        const plotWidth = width - paddingLeft - paddingRight;
+        const plotHeight = height - paddingTop - paddingBottom;
+
+        function mapX(valX) {
+          const base = paddingLeft + ((valX - xMin) / (xMax - xMin)) * plotWidth;
+          return (base - width / 2) * zoomLevel + width / 2 + panOffsetX;
+        }
+
+        function mapY(valY) {
+          const base = paddingTop + ((yMax - valY) / (yMax - yMin)) * plotHeight;
+          return (base - height / 2) * zoomLevel + height / 2 + panOffsetY;
+        }
+
+        const filtered = getFilteredPlayers();
+
+        for (let player of filtered) {
+          const pX = currentTab === 'career' ? player.careerX : player.peakX;
+          const pY = currentTab === 'career' ? player.careerY : player.peakY;
+          const cx = mapX(pX);
+          const cy = mapY(pY);
+
+          const dist = Math.hypot(mouseX - cx, mouseY - cy);
+          if (dist <= 12) {
+            const originalIdx = playersData.findIndex(p => p.rank === player.rank);
+            updateSelectedPlayerSidebar(originalIdx);
+            drawCanvas();
+            break;
+          }
+        }
+      }
+    }
+
+    function updateSelectedPlayerSidebar(index) {
+      selectedPlayerIndex = index;
+      const p = playersData[index];
+
+      document.getElementById('sidebarRankBadge').innerText = `#${p.rank} Overall`;
+      document.getElementById('sidebarName').innerText = p.name;
+      document.getElementById('sidebarPos').innerText = p.posFull;
+      document.getElementById('sidebarEra').innerText = `${p.country} • ${p.era} Era`;
+
+      const scoreVal = currentTab === 'career' ? p.careerScore : p.peakScore;
+      const distVal = currentTab === 'career' ? p.careerD : p.peakD;
+
+      document.getElementById('sidebarScore').innerText = scoreVal.toFixed(2);
+      document.getElementById('sidebarDistance').innerText = distVal.toFixed(2);
+
+      const setBar = (val, barId, textId) => {
+        const safeVal = typeof val === 'number' ? val : 0;
+        document.getElementById(textId).innerText = safeVal.toFixed(2);
+        document.getElementById(barId).style.width = `${(safeVal / 5.0) * 100}%`;
+      };
+
+      setBar(p.scores.output, 'attr1Bar', 'attr1Val');
+      setBar(p.scores.creation, 'attr2Bar', 'attr2Val');
+      setBar(p.scores.technical, 'attr3Bar', 'attr3Val');
+      setBar(p.scores.biggame ?? p.scores.bg ?? 0, 'attr4Bar', 'attr4Val');
+      setBar(p.scores.athletic, 'attr5Bar', 'attr5Val');
+
+      document.getElementById('sidebarPeakSeason').innerText = p.peakSeason;
+      document.getElementById('sidebarPeakDesc').innerText = `Coords: (${p.peakX.toFixed(1)}, ${p.peakY.toFixed(1)}) | Peak Dist D = ${p.peakD.toFixed(2)}`;
+    }
+
+    function populateCompareSelectors() {
+      const selectA = document.getElementById('compareSelectA');
+      const selectB = document.getElementById('compareSelectB');
+
+      selectA.innerHTML = '';
+      selectB.innerHTML = '';
+
+      playersData.forEach((p, idx) => {
+        const optA = document.createElement('option');
+        optA.value = idx;
+        optA.innerText = `#${p.rank} ${p.name}`;
+        if (idx === 0) optA.selected = true;
+        selectA.appendChild(optA);
+
+        const optB = document.createElement('option');
+        optB.value = idx;
+        optB.innerText = `#${p.rank} ${p.name}`;
+        if (idx === 2) optB.selected = true;
+        selectB.appendChild(optB);
+      });
+    }
+
+    function updateCompareView() {
+      compareIndexA = parseInt(document.getElementById('compareSelectA').value);
+      compareIndexB = parseInt(document.getElementById('compareSelectB').value);
+
+      const pA = playersData[compareIndexA];
+      const pB = playersData[compareIndexB];
+
+      document.getElementById('compNameA').innerText = pA.name;
+      document.getElementById('compSeasonA').innerText = `Peak: ${pA.peakSeason}`;
+      document.getElementById('compScoreA').innerText = pA.careerScore.toFixed(2);
+      document.getElementById('compDistA').innerText = pA.careerD.toFixed(2);
+
+      document.getElementById('compNameB').innerText = pB.name;
+      document.getElementById('compSeasonB').innerText = `Peak: ${pB.peakSeason}`;
+      document.getElementById('compScoreB').innerText = pB.careerScore.toFixed(2);
+      document.getElementById('compDistB').innerText = pB.careerD.toFixed(2);
+
+      const ctxRadar = document.getElementById('compareRadarCanvas').getContext('2d');
+      if (compareRadarChart) compareRadarChart.destroy();
+
+      compareRadarChart = new Chart(ctxRadar, {
+        type: 'radar',
+        data: {
+          labels: ['Direct Output', 'Creation / xT', 'Technical Mastery', 'Big-Game Leverage', 'Athletic Power'],
+          datasets: [
+            {
+              label: pA.name,
+              data: [pA.scores.output, pA.scores.creation, pA.scores.technical, pA.scores.biggame ?? pA.scores.bg ?? 0, pA.scores.athletic],
+              backgroundColor: 'rgba(6, 182, 212, 0.30)',
+              borderColor: '#06b6d4',
+              borderWidth: 2.5,
+              pointBackgroundColor: '#06b6d4'
+            },
+            {
+              label: pB.name,
+              data: [pB.scores.output, pB.scores.creation, pB.scores.technical, pB.scores.biggame ?? pB.scores.bg ?? 0, pB.scores.athletic],
+              backgroundColor: 'rgba(251, 191, 36, 0.30)',
+              borderColor: '#fbbf24',
+              borderWidth: 2.5,
+              pointBackgroundColor: '#fbbf24'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              angleLines: { color: 'rgba(255, 255, 255, 0.15)' },
+              grid: { color: 'rgba(255, 255, 255, 0.15)' },
+              pointLabels: { color: '#f1f5f9', font: { size: 11, family: 'Inter', weight: 'bold' } },
+              ticks: { display: false, stepSize: 1 },
+              suggestedMin: 0,
+              suggestedMax: 5
+            }
+          },
+          plugins: {
+            legend: { labels: { color: '#ffffff', font: { family: 'Inter', size: 12, weight: 'bold' } } }
+          }
+        }
+      });
+    }
+
+    function renderLeaderboardTable() {
+      const tbody = document.getElementById('leaderboardBody');
+      const filtered = getFilteredPlayers();
+
+      filtered.sort((a, b) => {
+        let valA = tableSortCol === 'score' ? a.careerScore : a.careerD;
+        let valB = tableSortCol === 'score' ? b.careerScore : b.careerD;
+        
+        if (tableSortCol === 'distance') {
+          return tableSortAsc ? valA - valB : valB - valA;
+        } else {
+          return tableSortAsc ? valB - valA : valA - valB;
+        }
+      });
+
+      document.getElementById('tableCount').innerText = filtered.length;
+      tbody.innerHTML = '';
+
+      filtered.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-white/10 transition border-b border-white/10 cursor-pointer";
+        
+        const origIndex = playersData.findIndex(item => item.rank === p.rank);
+
+        const biggameScore = p.scores.biggame ?? p.scores.bg ?? 0;
+
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-black font-mono text-slate-300">#${p.rank}</td>
+          <td class="py-3 px-4 font-black text-slate-100 font-sans flex items-center gap-2">
+            ${p.name}
+            ${p.rank <= 3 ? '<i class="fa-solid fa-crown text-amber-400 text-xs"></i>' : ''}
+          </td>
+          <td class="py-3 px-4"><span class="px-2.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-200 font-bold border border-white/10">${p.pos}</span></td>
+          <td class="py-3 px-4 text-slate-300 text-xs font-semibold">${p.era}</td>
+          <td class="py-3 px-4 text-center text-cyan-300 font-mono font-bold">${p.scores.output.toFixed(2)}</td>
+          <td class="py-3 px-4 text-center text-emerald-400 font-mono font-bold">${p.scores.creation.toFixed(2)}</td>
+          <td class="py-3 px-4 text-center text-purple-300 font-mono font-bold">${p.scores.technical.toFixed(2)}</td>
+          <td class="py-3 px-4 text-center text-amber-400 font-mono font-bold">${biggameScore.toFixed(2)}</td>
+          <td class="py-3 px-4 text-center text-rose-400 font-mono font-bold">${p.scores.athletic.toFixed(2)}</td>
+          <td class="py-3 px-4 text-center font-black text-cyan-300 font-mono text-sm">${p.careerScore.toFixed(2)}</td>
+          <td class="py-3 px-4 text-center font-black text-amber-400 font-mono text-sm">D = ${p.careerD.toFixed(2)}</td>
+          <td class="py-3 px-4 text-right">
+            <button onclick="openPlayerModal(${origIndex})" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-amber-400 hover:text-slate-950 text-amber-300 text-xs font-black font-mono transition shadow">
+              Inspect
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function sortTable(col) {
+      if (tableSortCol === col) {
+        tableSortAsc = !tableSortAsc;
+      } else {
+        tableSortCol = col;
+        tableSortAsc = col === 'distance' ? true : false;
+      }
+      renderLeaderboardTable();
+    }
+
+    function openPlayerModal(index) {
+      const p = playersData[index];
+      const modal = document.getElementById('playerModal');
+
+      document.getElementById('modalRankBox').innerText = `#${p.rank}`;
+      document.getElementById('modalName').innerText = p.name;
+      document.getElementById('modalPosBadge').innerText = p.posFull;
+      document.getElementById('modalEra').innerText = `${p.country} • ${p.era} Era`;
+
+      document.getElementById('modalScore').innerText = p.careerScore.toFixed(2);
+      document.getElementById('modalDist').innerText = `D = ${p.careerD.toFixed(2)}`;
+
+      document.getElementById('modalBestSeasonTitle').innerText = p.peakSeason;
+      document.getElementById('modalBestSeasonMetrics').innerText = `Peak Score: ${p.peakScore.toFixed(2)} | Coords: (${p.peakX.toFixed(1)}, ${p.peakY.toFixed(1)}) | Peak Dist: D = ${p.peakD.toFixed(2)}`;
+
+      document.getElementById('modalDescription').innerText = p.desc;
+
+      const ctxRadar = document.getElementById('modalRadarCanvas').getContext('2d');
+      if (modalRadarChart) modalRadarChart.destroy();
+
+      modalRadarChart = new Chart(ctxRadar, {
+        type: 'radar',
+        data: {
+          labels: ['Direct Output', 'Creation / xT', 'Technical Mastery', 'Big-Game Leverage', 'Athletic Power'],
+          datasets: [{
+            label: p.name,
+            data: [p.scores.output, p.scores.creation, p.scores.technical, p.scores.biggame ?? p.scores.bg ?? 0, p.scores.athletic],
+            backgroundColor: 'rgba(251, 191, 36, 0.30)',
+            borderColor: '#fbbf24',
+            borderWidth: 2.5,
+            pointBackgroundColor: '#fbbf24'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              angleLines: { color: 'rgba(255, 255, 255, 0.15)' },
+              grid: { color: 'rgba(255, 255, 255, 0.15)' },
+              pointLabels: { color: '#f1f5f9', font: { size: 11, family: 'Inter', weight: 'bold' } },
+              ticks: { display: false, stepSize: 1 },
+              suggestedMin: 0,
+              suggestedMax: 5
+            }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+
+      modal.classList.remove('hidden');
+    }
+
+    function closePlayerModal() {
+      document.getElementById('playerModal').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
